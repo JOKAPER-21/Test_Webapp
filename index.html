@@ -3,478 +3,648 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoCAD Production Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>VID — Production Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:        #060e0a;
-    --surface:   #0b1610;
-    --surface2:  #0f1e15;
-    --surface3:  #142619;
-    --border:    #1a3324;
-    --border-active: #2a6644;
-    --accent:    #22c55e;
-    --accent-dark: #16a34a;
-    --accent2:   #4ade80;
-    --accent3:   #86efac;
-    --accent-glow: rgba(34,197,94,0.15);
-    --text:      #e2ffe9;
-    --text-muted:#4d7a5e;
-    --text-dim:  #7aad8a;
-    --danger:    #f87171;
-    --warning:   #fbbf24;
-    --grid:      rgba(34,197,94,0.03);
-  }
-
-  * { margin:0; padding:0; box-sizing:border-box; }
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content:''; position:fixed; inset:0;
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events:none; z-index:0;
-  }
-
-  header {
-    position:sticky; top:0; z-index:100;
-    background: rgba(6,14,10,0.96);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    display:flex; align-items:center; gap:18px;
-    height:58px;
-  }
-
-  .logo {
-    display:flex; align-items:center; gap:10px;
-    font-weight:800; font-size:16px; letter-spacing:1.5px;
-    text-transform:uppercase; color:var(--accent);
-    white-space:nowrap;
-  }
-
-  .logo-icon {
-    width:30px; height:30px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-    clip-path: polygon(0 0, 72% 0, 100% 28%, 100% 100%, 0 100%);
-    display:flex; align-items:center; justify-content:center;
-    font-size:9px; font-weight:800; color:#fff; letter-spacing:0;
-    box-shadow: 0 0 14px var(--accent-glow);
-  }
-
-  .header-divider { width:1px; height:26px; background:var(--border); }
-
-  .project-tag {
-    font-family:'Share Tech Mono',monospace;
-    font-size:10px; color:var(--text-muted); letter-spacing:1.5px;
-  }
-
-  .header-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
-
-  .live-badge {
-    display:flex; align-items:center; gap:6px;
-    font-size:10px; color:var(--accent2); letter-spacing:1.5px;
-    font-family:'Share Tech Mono',monospace;
-  }
-
-  .live-dot {
-    width:7px; height:7px; border-radius:50%;
-    background:var(--accent2);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%,100%{ opacity:1; box-shadow:0 0 0 0 rgba(74,222,128,.5); }
-    50%    { opacity:.6; box-shadow:0 0 0 5px rgba(74,222,128,0); }
-  }
-
-  .refresh-btn {
-    background:var(--surface2); border:1px solid var(--border);
-    color:var(--text-dim); padding:6px 14px; border-radius:6px;
-    font-size:11px; cursor:pointer; font-family:'Poppins',sans-serif;
-    font-weight:600; letter-spacing:.5px;
-    transition:all .2s; display:flex; align-items:center; gap:6px;
-  }
-  .refresh-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-glow); }
-  .refresh-btn.spinning svg { animation:spin 1s linear infinite; }
-  @keyframes spin { to{transform:rotate(360deg);} }
-
-  .mode-switcher {
-    display:flex; background:var(--surface);
-    border:1px solid var(--border); border-radius:6px; overflow:hidden;
-  }
-
-  .mode-btn {
-    padding:6px 18px; font-family:'Poppins',sans-serif;
-    font-weight:600; font-size:12px; letter-spacing:.5px;
-    text-transform:uppercase; cursor:pointer; border:none;
-    background:transparent; color:var(--text-muted);
-    transition:all .2s;
-  }
-  .mode-btn.active { background:var(--accent); color:#040d07; }
-
-  main {
-    position:relative; z-index:1;
-    padding:20px 24px; max-width:1600px; margin:0 auto;
-  }
-
-  .stats-row {
-    display:grid; grid-template-columns:repeat(5,1fr); gap:12px;
-    margin-bottom:20px;
-  }
-
-  .stat-card {
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:8px; padding:14px 16px;
-    position:relative; overflow:hidden; transition:border-color .2s;
-  }
-  .stat-card:hover { border-color:var(--border-active); }
-
-  .stat-card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:3px;
-    background:var(--card-accent, var(--accent));
-    box-shadow: 0 0 10px var(--card-accent, var(--accent));
-  }
-
-  .stat-label {
-    font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
-    color:var(--text-muted); margin-bottom:8px; font-weight:600;
-  }
-
-  .stat-value {
-    font-family:'Share Tech Mono',monospace;
-    font-size:30px; line-height:1;
-    color:var(--card-accent, var(--accent));
-  }
-
-  .stat-sub { font-size:10px; color:var(--text-muted); margin-top:5px; font-weight:500; }
-
-  .toolbar {
-    display:flex; align-items:center; gap:10px;
-    margin-bottom:16px; flex-wrap:wrap;
-  }
-
-  .search-box {
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:6px; padding:8px 14px; color:var(--text);
-    font-size:12px; font-family:'Poppins',sans-serif;
-    width:230px; outline:none; transition:all .2s;
-  }
-  .search-box::placeholder { color:var(--text-muted); }
-  .search-box:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
-
-  .filter-select {
-    background:var(--surface); border:1px solid var(--border);
-    color:var(--text); font-size:11px;
-    padding:8px 12px; border-radius:6px; outline:none; cursor:pointer;
-    font-family:'Poppins',sans-serif; font-weight:600;
-    transition:border-color .2s;
-  }
-  .filter-select:focus { border-color:var(--accent); }
-
-  .btn-primary {
-    background:linear-gradient(135deg, var(--accent), var(--accent-dark));
-    border:none; color:#040d07; padding:8px 18px; border-radius:6px;
-    font-family:'Poppins',sans-serif; font-weight:700; font-size:12px;
-    letter-spacing:.5px; text-transform:uppercase; cursor:pointer;
-    transition:all .2s; margin-left:auto;
-    display:flex; align-items:center; gap:6px;
-    box-shadow:0 0 16px var(--accent-glow);
-  }
-  .btn-primary:hover { filter:brightness(1.1); box-shadow:0 0 24px rgba(34,197,94,.35); }
-
-  .table-wrapper {
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:10px; overflow:hidden;
-  }
-
-  table { width:100%; border-collapse:collapse; }
-  thead { background:var(--surface2); border-bottom:1px solid var(--border); }
-
-  th {
-    padding:11px 14px; text-align:left;
-    font-weight:700; font-size:10px;
-    letter-spacing:1.5px; text-transform:uppercase;
-    color:var(--text-muted); white-space:nowrap;
-  }
-
-  tr { border-bottom:1px solid var(--border); transition:background .15s; }
-  tbody tr:last-child { border-bottom:none; }
-  tbody tr:hover { background:var(--surface2); }
-  td { padding:10px 14px; font-size:12px; vertical-align:middle; }
-
-  .drawing-num {
-    font-family:'Share Tech Mono',monospace; font-size:11px;
-    color:var(--accent); letter-spacing:.5px;
-  }
-
-  .drawing-title { color:var(--text); font-weight:500; }
-
-  /* ── STATUS BADGE + CLICK-TO-EDIT ── */
-  .badge {
-    display:inline-flex; align-items:center; gap:5px;
-    padding:3px 10px; border-radius:4px;
-    font-size:10px; font-weight:700; font-family:'Poppins',sans-serif;
-    letter-spacing:.5px; text-transform:uppercase;
-    border:1px solid transparent; white-space:nowrap;
-    cursor:pointer; transition:filter .15s, opacity .2s;
-    user-select:none;
-  }
-  .badge:hover { filter:brightness(1.25); }
-  .badge.saving { opacity:.5; pointer-events:none; }
-
-  .badge-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
-
-  .badge-not-started { background:rgba(77,122,94,.12); border-color:rgba(77,122,94,.3); color:#7aad8a; }
-  .badge-not-started .badge-dot { background:#4d7a5e; }
-  .badge-in-progress { background:rgba(34,197,94,.12); border-color:rgba(34,197,94,.3); color:#4ade80; }
-  .badge-in-progress .badge-dot { background:var(--accent); animation:pulse 1.5s infinite; }
-  .badge-review      { background:rgba(251,191,36,.12); border-color:rgba(251,191,36,.3); color:#fbbf24; }
-  .badge-review .badge-dot { background:#fbbf24; }
-  .badge-completed   { background:rgba(134,239,172,.15); border-color:rgba(134,239,172,.4); color:#86efac; }
-  .badge-completed .badge-dot { background:#86efac; }
-  .badge-on-hold     { background:rgba(248,113,113,.12); border-color:rgba(248,113,113,.3); color:#f87171; }
-  .badge-on-hold .badge-dot { background:#f87171; }
-
-  /* Status popup */
-  .status-cell { position:relative; display:inline-block; }
-
-  .status-popup {
-    position:absolute; top:calc(100% + 5px); left:0; z-index:80;
-    background:var(--surface2); border:1px solid var(--border-active);
-    border-radius:8px; min-width:168px; padding:4px;
-    box-shadow:0 12px 40px rgba(0,0,0,.7), 0 0 0 1px rgba(34,197,94,.08);
-    display:none;
-  }
-  .status-popup.open { display:block; animation:popIn .15s ease; }
-  @keyframes popIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
-
-  .status-option {
-    display:flex; align-items:center; gap:8px;
-    padding:8px 10px; border-radius:5px; cursor:pointer;
-    font-size:11px; font-weight:600; letter-spacing:.4px;
-    text-transform:uppercase; transition:background .12s;
-    color:var(--text-dim);
-  }
-  .status-option:hover { background:var(--surface3); color:var(--text); }
-  .status-option.active { color:var(--accent); }
-  .opt-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
-
-  /* assignee chip */
-  .assignee-chip {
-    display:inline-flex; align-items:center; gap:6px;
-    padding:3px 10px 3px 4px; border-radius:20px;
-    background:var(--surface3); border:1px solid var(--border);
-    font-size:11px; font-weight:500;
-  }
-
-  .avatar {
-    width:20px; height:20px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:9px; font-weight:700; color:#fff; flex-shrink:0;
-  }
-
-  .progress-bar { height:4px; background:var(--surface3); border-radius:2px; overflow:hidden; }
-  .progress-fill {
-    height:100%; border-radius:2px;
-    background:linear-gradient(90deg, var(--accent-dark), var(--accent2));
-    transition:width .4s ease;
-  }
-
-  /* Tree */
-  .tree-container {
-    background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;
-  }
-
-  .tree-node { border-bottom:1px solid var(--border); }
-  .tree-node:last-child { border-bottom:none; }
-
-  .tree-section-header {
-    display:flex; align-items:center; gap:10px;
-    padding:13px 16px; cursor:pointer; background:var(--surface2);
-    border-bottom:1px solid var(--border); transition:background .15s;
-  }
-  .tree-section-header:hover { background:var(--surface3); }
-
-  .tree-toggle {
-    width:18px; height:18px; background:var(--surface3);
-    border:1px solid var(--border-active); border-radius:4px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:9px; color:var(--accent); flex-shrink:0;
-  }
-
-  .tree-section-name {
-    font-weight:700; font-size:13px; letter-spacing:.5px;
-    text-transform:uppercase; flex:1; color:var(--text);
-  }
-
-  .tree-count {
-    font-family:'Share Tech Mono',monospace; font-size:10px;
-    color:var(--text-muted); background:var(--surface3);
-    border:1px solid var(--border); padding:2px 8px; border-radius:4px;
-  }
-
-  .tree-children { display:none; }
-  .tree-children.open { display:block; }
-
-  .tree-sub-header {
-    display:flex; align-items:center; gap:10px;
-    padding:10px 16px 10px 36px; cursor:pointer;
-    border-bottom:1px solid var(--border);
-    transition:background .15s; background:var(--surface);
-  }
-  .tree-sub-header:hover { background:var(--surface2); }
-
-  .tree-connector {
-    width:16px; height:16px; flex-shrink:0; position:relative;
-  }
-  .tree-connector::before { content:''; position:absolute; left:6px; top:0; bottom:50%; width:1px; background:var(--border-active); }
-  .tree-connector::after  { content:''; position:absolute; left:6px; top:50%; right:0; height:1px; background:var(--border-active); }
-
-  .tree-sub-name {
-    font-family:'Share Tech Mono',monospace; font-size:12px;
-    color:var(--accent); flex:1; letter-spacing:.5px;
-  }
-
-  .tree-sub-children { display:none; }
-  .tree-sub-children.open { display:block; }
-
-  .tree-leaf {
-    display:flex; align-items:center; gap:10px;
-    padding:9px 16px 9px 60px; border-bottom:1px solid var(--border);
-    transition:background .15s;
-  }
-  .tree-leaf:last-child { border-bottom:none; }
-  .tree-leaf:hover { background:var(--surface2); }
-
-  .tree-leaf-connector {
-    width:24px; height:16px; flex-shrink:0; position:relative;
-  }
-  .tree-leaf-connector::before { content:''; position:absolute; left:0; top:0; bottom:50%; width:1px; background:var(--border); }
-  .tree-leaf-connector::after  { content:''; position:absolute; left:0; top:50%; right:0; height:1px; background:var(--border); }
-
-  .section-label {
-    font-weight:700; font-size:10px; letter-spacing:2px; text-transform:uppercase;
-    color:var(--text-muted); margin-bottom:10px; padding-left:2px;
-    display:flex; align-items:center; gap:8px;
-  }
-  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
-
-  /* Modal */
-  .modal-overlay {
-    position:fixed; inset:0; z-index:200;
-    background:rgba(0,0,0,.75); backdrop-filter:blur(8px);
-    display:none; align-items:center; justify-content:center;
-  }
-  .modal-overlay.open { display:flex; }
-
-  .modal {
-    background:var(--surface); border:1px solid var(--border-active);
-    border-radius:12px; width:500px; max-width:95vw;
-    box-shadow:0 24px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(34,197,94,.08);
-    animation:modalIn .2s ease;
-  }
-  @keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(-10px)} to{opacity:1;transform:none} }
-
-  .modal-header {
-    padding:16px 20px; border-bottom:1px solid var(--border);
-    display:flex; align-items:center; justify-content:space-between;
-  }
-
-  .modal-title { font-weight:700; font-size:14px; letter-spacing:1px; text-transform:uppercase; color:var(--accent); }
-
-  .modal-close {
-    background:none; border:none; color:var(--text-muted); font-size:18px;
-    cursor:pointer; padding:2px 6px; border-radius:4px; transition:all .15s;
-  }
-  .modal-close:hover { color:var(--text); background:var(--surface2); }
-
-  .modal-body { padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .field { display:flex; flex-direction:column; gap:6px; }
-  .field.full { grid-column:1/-1; }
-
-  .field label { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); font-weight:700; }
-
-  .field input, .field select {
-    background:var(--surface2); border:1px solid var(--border);
-    color:var(--text); padding:9px 12px; border-radius:6px;
-    font-size:12px; font-family:'Poppins',sans-serif; outline:none; transition:all .2s;
-  }
-  .field input:focus, .field select:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
-  .field input::placeholder { color:var(--text-muted); }
-
-  .modal-footer {
-    padding:14px 20px; border-top:1px solid var(--border);
-    display:flex; justify-content:flex-end; gap:10px;
-  }
-
-  .btn-cancel {
-    background:var(--surface2); border:1px solid var(--border);
-    color:var(--text-dim); padding:8px 18px; border-radius:6px;
-    font-family:'Poppins',sans-serif; font-weight:600; font-size:12px;
-    cursor:pointer; transition:all .2s;
-  }
-  .btn-cancel:hover { border-color:var(--text-muted); color:var(--text); }
-
-  .loading-row td {
-    text-align:center; padding:40px; color:var(--text-muted);
-    font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:2px;
-  }
-
-  .spinner {
-    display:inline-block; width:14px; height:14px;
-    border:2px solid var(--border); border-top-color:var(--accent);
-    border-radius:50%; animation:spin 1s linear infinite;
-    vertical-align:middle; margin-right:8px;
-  }
-
-  .empty-state { text-align:center; padding:60px 20px; color:var(--text-muted); }
-  .empty-state p { font-size:12px; letter-spacing:1.5px; font-weight:600; }
-
-  .toast {
-    position:fixed; bottom:24px; right:24px; z-index:300;
-    background:var(--surface2); border:1px solid var(--border-active);
-    border-left:3px solid var(--accent); border-radius:8px; padding:12px 16px;
-    font-size:12px; font-weight:500; color:var(--text);
-    box-shadow:0 8px 32px rgba(0,0,0,.5), 0 0 16px var(--accent-glow);
-    transform:translateY(80px); opacity:0;
-    transition:all .35s cubic-bezier(.34,1.56,.64,1);
-    max-width:300px;
-  }
-  .toast.show { transform:translateY(0); opacity:1; }
-
-  ::-webkit-scrollbar { width:6px; height:6px; }
-  ::-webkit-scrollbar-track { background:var(--bg); }
-  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
-  ::-webkit-scrollbar-thumb:hover { background:var(--border-active); }
+:root {
+  --white:    #ffffff;
+  --off:      #f7f9f7;
+  --off2:     #eef3ee;
+  --off3:     #e4ede4;
+  --border:   #d4e4d4;
+  --border2:  #c0d8c0;
+  --g50:      #f0faf0;
+  --g100:     #dcf0dc;
+  --g200:     #b8e0b8;
+  --g300:     #84c984;
+  --g400:     #4db04d;
+  --g500:     #2d9e2d;
+  --g600:     #1f7a1f;
+  --g700:     #155715;
+  --g800:     #0d3d0d;
+  --g900:     #071e07;
+  --text:     #0d1f0d;
+  --text2:    #2a4a2a;
+  --text3:    #4a724a;
+  --text4:    #7a9e7a;
+  --shadow:   0 1px 3px rgba(45,158,45,.08), 0 4px 16px rgba(45,158,45,.06);
+  --shadow2:  0 2px 8px rgba(45,158,45,.1), 0 8px 32px rgba(45,158,45,.08);
+  --shadow3:  0 8px 24px rgba(45,158,45,.14), 0 24px 64px rgba(45,158,45,.1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--off);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* subtle dot pattern */
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: radial-gradient(circle, rgba(45,158,45,.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+header {
+  position: sticky; top:0; z-index:200;
+  background: var(--white);
+  border-bottom: 1.5px solid var(--border);
+  box-shadow: 0 2px 16px rgba(45,158,45,.06);
+  padding: 0 32px;
+  display: flex; align-items: center; gap:0;
+  height: 64px;
+}
+
+.brand {
+  display: flex; align-items: center; gap: 14px;
+  text-decoration: none; flex-shrink:0;
+}
+
+.brand-logo {
+  width: 40px; height: 40px;
+  background: var(--g600);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(31,122,31,.3);
+}
+
+.brand-logo::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, var(--g500) 0%, var(--g700) 100%);
+}
+
+.brand-logo-text {
+  position: relative; z-index:1;
+  font-family: 'Playfair Display', serif;
+  font-weight: 800; font-size: 17px; color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800; font-size: 22px;
+  color: var(--g700);
+  letter-spacing: -0.5px;
+  line-height:1;
+}
+
+.brand-sub {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--text4);
+  line-height:1; margin-top: 2px;
+}
+
+.header-sep {
+  width: 1px; height: 32px; background: var(--border);
+  margin: 0 24px;
+}
+
+.header-title {
+  font-size: 13px; font-weight: 600; color: var(--text3);
+  letter-spacing: .3px;
+}
+
+.header-right {
+  margin-left: auto; display:flex; align-items:center; gap:10px;
+}
+
+/* mode tabs */
+.mode-tabs {
+  display:flex; background:var(--off2); border:1.5px solid var(--border);
+  border-radius: 8px; padding: 3px; gap: 2px;
+}
+
+.mode-tab {
+  padding: 6px 18px; border-radius: 6px; border: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 12px;
+  background: transparent; color: var(--text3); transition: all .2s;
+  letter-spacing: .3px;
+}
+.mode-tab.active {
+  background: var(--g600); color: #fff;
+  box-shadow: 0 2px 8px rgba(31,122,31,.25);
+}
+
+.hdr-btn {
+  display: flex; align-items: center; gap:6px;
+  padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--white); color: var(--text3); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 12px;
+  transition: all .2s;
+}
+.hdr-btn:hover { border-color: var(--g400); color: var(--g600); background: var(--g50); }
+.hdr-btn.spinning svg { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.live-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px;
+  background: var(--g50); border: 1.5px solid var(--g200);
+  font-size: 11px; font-weight: 700; color: var(--g600);
+  letter-spacing: .8px;
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--g500);
+  animation: livepulse 2s infinite;
+}
+@keyframes livepulse {
+  0%,100%{ box-shadow:0 0 0 0 rgba(45,158,45,.5); }
+  50%{ box-shadow:0 0 0 5px rgba(45,158,45,0); }
+}
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+main {
+  position: relative; z-index:1;
+  max-width: 1600px; margin: 0 auto;
+  padding: 28px 32px;
+}
+
+/* ── stat cards ── */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(5,1fr); gap: 16px;
+  margin-bottom: 28px;
+}
+
+.kpi-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 20px 20px 18px;
+  position: relative; overflow: hidden;
+  transition: box-shadow .2s, transform .2s, border-color .2s;
+  cursor: default;
+}
+.kpi-card:hover {
+  box-shadow: var(--shadow2); border-color: var(--border2);
+  transform: translateY(-2px);
+}
+
+.kpi-card::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+  background: var(--kpi-color, var(--g500));
+  border-radius: 0 0 14px 14px;
+}
+
+.kpi-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--kpi-bg, var(--g50));
+  display: flex; align-items:center; justify-content:center;
+  margin-bottom: 12px; font-size: 16px;
+}
+
+.kpi-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text4); margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 34px; font-weight: 500; line-height:1;
+  color: var(--text);
+}
+
+.kpi-sub {
+  font-size: 11px; color: var(--text4); margin-top: 5px; font-weight: 500;
+}
+
+.kpi-bar {
+  height: 3px; background: var(--off3); border-radius: 2px;
+  margin-top: 10px; overflow:hidden;
+}
+.kpi-bar-fill {
+  height: 100%; background: var(--kpi-color, var(--g500));
+  border-radius: 2px; transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── toolbar ── */
+.toolbar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+
+.search-wrap {
+  position: relative; flex-shrink:0;
+}
+.search-icon {
+  position: absolute; left: 12px; top:50%; transform:translateY(-50%);
+  color: var(--text4); pointer-events:none;
+}
+.search-input {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 9px 12px 9px 36px;
+  font-size: 13px; font-family: 'DM Sans', sans-serif;
+  color: var(--text); width: 240px; outline: none;
+  transition: all .2s;
+}
+.search-input::placeholder { color: var(--text4); }
+.search-input:focus { border-color: var(--g400); box-shadow: 0 0 0 3px rgba(77,176,77,.12); }
+
+.tb-select {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 9px 12px; color: var(--text);
+  font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 600;
+  outline: none; cursor: pointer; transition: border-color .2s;
+}
+.tb-select:focus { border-color: var(--g400); }
+
+.btn-add {
+  margin-left: auto; display:flex; align-items:center; gap:8px;
+  background: var(--g600); color: #fff; border: none;
+  padding: 9px 22px; border-radius: 8px; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px;
+  transition: all .2s; box-shadow: 0 2px 12px rgba(31,122,31,.2);
+  letter-spacing: .3px;
+}
+.btn-add:hover { background: var(--g700); box-shadow: 0 4px 20px rgba(31,122,31,.3); }
+
+/* ── section label ── */
+.sec-label {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 10px; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text4);
+  margin-bottom: 16px;
+}
+.sec-label::before {
+  content:''; width:16px; height:2px; background: var(--g500); border-radius:1px; flex-shrink:0;
+}
+.sec-label::after {
+  content:''; flex:1; height:1px; background: var(--border);
+}
+
+/* ══════════════════════════════════════
+   YARD GRID
+══════════════════════════════════════ */
+.yard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 18px;
+}
+
+/* Ward card */
+.ward-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow .2s;
+}
+.ward-card:hover { box-shadow: var(--shadow2); }
+
+.ward-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px; cursor: pointer;
+  border-bottom: 1.5px solid var(--off3);
+  background: linear-gradient(135deg, var(--g50) 0%, var(--white) 100%);
+  transition: background .15s; user-select:none;
+}
+.ward-head:hover { background: var(--g50); }
+
+.ward-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800; font-size: 24px; color: var(--g600);
+  line-height:1; width: 32px;
+}
+
+.ward-info { flex:1; min-width:0; }
+
+.ward-region {
+  font-size: 13px; font-weight: 700; color: var(--text); line-height:1.2;
+}
+
+.ward-route {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--text4); margin-top:2px; letter-spacing:.5px;
+}
+
+.ward-pill {
+  background: var(--g100); color: var(--g700);
+  font-size: 11px; font-weight: 700; padding: 4px 10px;
+  border-radius: 20px; letter-spacing:.3px; flex-shrink:0;
+}
+
+.ward-chevron {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 1.5px solid var(--border); background: var(--white);
+  display: flex; align-items:center; justify-content:center;
+  font-size: 10px; color: var(--text4); flex-shrink:0;
+  transition: all .2s;
+}
+.ward-chevron.open { background: var(--g600); border-color: var(--g600); color: #fff; }
+
+.ward-body { display:none; }
+.ward-body.open { display:block; }
+
+/* Section header inside ward */
+.sec-row { border-bottom: 1px solid var(--off3); }
+.sec-row:last-child { border-bottom: none; }
+
+.sec-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 20px; cursor: pointer;
+  background: var(--off); border-bottom: 1px solid var(--off3);
+  transition: background .15s; user-select:none;
+}
+.sec-head:hover { background: var(--off2); }
+
+.sec-code-tag {
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  color: var(--g600); background: var(--g50); border: 1px solid var(--g200);
+  padding: 3px 8px; border-radius: 5px; flex-shrink:0; letter-spacing:.5px;
+}
+
+.sec-count {
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text4);
+  background: var(--off2); border: 1px solid var(--border);
+  padding: 2px 7px; border-radius: 4px; flex-shrink:0;
+}
+
+.sec-mini-progress {
+  flex:1; display:flex; align-items:center; gap:6px;
+}
+.sec-prog-bar {
+  flex:1; height:3px; background:var(--off3); border-radius:2px; overflow:hidden; max-width:80px;
+}
+.sec-prog-fill {
+  height:100%; background: var(--g400); border-radius:2px; transition:width .5s ease;
+}
+.sec-prog-pct { font-size:10px; color:var(--text4); font-weight:600; flex-shrink:0; }
+
+.sec-toggle {
+  width:18px; height:18px; border-radius:5px; border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; color:var(--text4); flex-shrink:0; transition:all .15s;
+}
+.sec-toggle.open { background:var(--g600); border-color:var(--g600); color:#fff; }
+
+.sec-children { display:none; }
+.sec-children.open { display:block; }
+
+/* Station row */
+.stn-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px 10px 36px;
+  border-bottom: 1px solid var(--off3);
+  transition: background .12s;
+}
+.stn-row:last-child { border-bottom:none; }
+.stn-row:hover { background: var(--g50); }
+
+.stn-bullet {
+  width: 5px; height: 5px; border-radius:50%;
+  background: var(--g300); flex-shrink:0;
+}
+
+.stn-code {
+  font-family: 'DM Mono', monospace; font-size:11px; font-weight:500;
+  color: var(--g600); width:44px; flex-shrink:0; letter-spacing:.5px;
+}
+
+.stn-name {
+  font-size:12px; font-weight:500; color:var(--text2); flex:1;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* ══════════════════════════════════════
+   STATUS BADGE + POPUP
+══════════════════════════════════════ */
+.status-cell { position:relative; display:inline-flex; flex-shrink:0; }
+
+.s-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  padding: 4px 10px; border-radius: 6px;
+  font-size:10px; font-weight:700; letter-spacing:.5px;
+  font-family:'DM Sans',sans-serif; text-transform:uppercase;
+  border: 1.5px solid transparent; white-space:nowrap;
+  cursor:pointer; transition:all .15s; user-select:none;
+}
+.s-badge::after { content:'▾'; font-size:8px; margin-left:2px; opacity:.7; }
+.s-badge:hover { filter:brightness(.94); }
+
+.s-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+
+.s-not-started  { background:#f5f5f5;  border-color:#ddd;    color:#777; }
+.s-not-started .s-dot  { background:#aaa; }
+.s-in-progress  { background:var(--g50);  border-color:var(--g200); color:var(--g700); }
+.s-in-progress .s-dot  { background:var(--g500); animation:livepulse 1.5s infinite; }
+.s-review       { background:#fffbeb; border-color:#fde68a; color:#92400e; }
+.s-review .s-dot       { background:#f59e0b; }
+.s-completed    { background:#f0fdf4; border-color:#a7f3d0; color:#065f46; }
+.s-completed .s-dot    { background:#10b981; }
+.s-on-hold      { background:#fff1f2; border-color:#fecdd3; color:#9f1239; }
+.s-on-hold .s-dot      { background:#f43f5e; }
+
+.s-popup {
+  position:absolute; top:calc(100% + 6px); left:0; z-index:300;
+  background:var(--white); border:1.5px solid var(--border2);
+  border-radius:10px; min-width:170px; padding:5px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  display:none;
+}
+.s-popup.open { display:block; animation:popIn .15s ease; }
+@keyframes popIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+
+.s-opt {
+  display:flex; align-items:center; gap:9px; padding:9px 11px;
+  border-radius:7px; cursor:pointer; font-size:12px; font-weight:600;
+  color:var(--text2); transition:background .1s; letter-spacing:.2px;
+}
+.s-opt:hover { background:var(--off); }
+.s-opt.active { color:var(--g600); background:var(--g50); }
+.s-opt-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* assignee chip */
+.a-chip {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:3px 8px 3px 3px; border-radius:20px;
+  background:var(--off2); border:1px solid var(--border);
+  font-size:11px; font-weight:600; color:var(--text2); flex-shrink:0;
+}
+.a-avatar {
+  width:18px; height:18px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:8px; font-weight:700; color:#fff; flex-shrink:0;
+}
+
+.mini-prog {
+  width:44px; height:3px; background:var(--off3); border-radius:2px; overflow:hidden; flex-shrink:0;
+}
+.mini-prog-fill {
+  height:100%; border-radius:2px;
+  background:linear-gradient(90deg,var(--g400),var(--g500));
+  transition:width .4s ease;
+}
+
+/* ══════════════════════════════════════
+   MIDSECTION TABLE
+══════════════════════════════════════ */
+.table-card {
+  background:var(--white); border:1.5px solid var(--border);
+  border-radius:16px; overflow:hidden; box-shadow:var(--shadow);
+}
+
+table { width:100%; border-collapse:collapse; }
+thead { background:var(--off2); border-bottom:1.5px solid var(--border); }
+th {
+  padding:12px 16px; text-align:left; font-size:10px; font-weight:800;
+  letter-spacing:1.8px; text-transform:uppercase; color:var(--text4);
+  white-space:nowrap;
+}
+tr { border-bottom:1px solid var(--off3); transition:background .12s; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:var(--g50); }
+td { padding:12px 16px; font-size:13px; vertical-align:middle; }
+
+.t-num { font-family:'DM Mono',monospace; font-size:12px; color:var(--g600); font-weight:500; }
+.t-title { font-weight:500; color:var(--text); }
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+.overlay {
+  position:fixed; inset:0; z-index:400;
+  background:rgba(7,30,7,.35); backdrop-filter:blur(6px);
+  display:none; align-items:center; justify-content:center;
+}
+.overlay.open { display:flex; }
+
+.modal {
+  background:var(--white); border:1.5px solid var(--border2);
+  border-radius:18px; width:540px; max-width:95vw;
+  box-shadow:var(--shadow3); animation:modalIn .22s ease;
+}
+@keyframes modalIn { from{opacity:0;transform:scale(.96) translateY(-12px)} to{opacity:1;transform:none} }
+
+.modal-hd {
+  padding:22px 24px 18px;
+  border-bottom:1.5px solid var(--off3);
+  display:flex; align-items:flex-start; justify-content:space-between;
+}
+.modal-hd-inner { display:flex; flex-direction:column; gap:2px; }
+.modal-ttl {
+  font-family:'Playfair Display',serif; font-weight:800;
+  font-size:20px; color:var(--g700); letter-spacing:-.3px;
+}
+.modal-sub { font-size:12px; color:var(--text4); font-weight:500; }
+.modal-x {
+  background:var(--off2); border:1.5px solid var(--border); color:var(--text3);
+  font-size:16px; width:30px; height:30px; border-radius:8px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all .15s; flex-shrink:0;
+}
+.modal-x:hover { background:var(--off3); color:var(--text); }
+
+.modal-body { padding:22px 24px; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.field { display:flex; flex-direction:column; gap:6px; }
+.field.full { grid-column:1/-1; }
+.field label { font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--text4); }
+.field input, .field select {
+  background:var(--off); border:1.5px solid var(--border);
+  color:var(--text); padding:10px 13px; border-radius:8px;
+  font-size:13px; font-family:'DM Sans',sans-serif; outline:none; transition:all .2s;
+}
+.field input:focus, .field select:focus {
+  border-color:var(--g400); background:var(--white);
+  box-shadow:0 0 0 3px rgba(77,176,77,.12);
+}
+.field input::placeholder { color:var(--text4); }
+
+.modal-ft {
+  padding:16px 24px 20px; border-top:1.5px solid var(--off3);
+  display:flex; justify-content:flex-end; gap:10px;
+}
+.btn-cancel {
+  background:var(--off2); border:1.5px solid var(--border); color:var(--text3);
+  padding:9px 20px; border-radius:8px; font-family:'DM Sans',sans-serif;
+  font-weight:600; font-size:13px; cursor:pointer; transition:all .2s;
+}
+.btn-cancel:hover { background:var(--off3); }
+
+/* ══════════════════════════════════════
+   LOADING / EMPTY
+══════════════════════════════════════ */
+.loader {
+  display:flex; align-items:center; justify-content:center;
+  gap:10px; padding:52px;
+  font-size:12px; font-weight:600; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--text4);
+}
+.spin-ring {
+  width:18px; height:18px; border:2px solid var(--border2);
+  border-top-color:var(--g500); border-radius:50%;
+  animation:spin 1s linear infinite; flex-shrink:0;
+}
+.empty-msg {
+  padding:60px; text-align:center;
+  font-size:12px; font-weight:700; letter-spacing:2px;
+  text-transform:uppercase; color:var(--text4);
+}
+
+/* Toast */
+.toast {
+  position:fixed; bottom:28px; right:28px; z-index:500;
+  background:var(--white); border:1.5px solid var(--border2);
+  border-left:4px solid var(--g500); border-radius:10px;
+  padding:14px 18px; font-size:13px; font-weight:600;
+  color:var(--text); box-shadow:var(--shadow3);
+  transform:translateY(70px); opacity:0;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  max-width:300px; display:flex; align-items:center; gap:10px;
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-icon { font-size:16px; flex-shrink:0; }
+
+/* ══════════════════════════════════════
+   FOOTER STRIP
+══════════════════════════════════════ */
+.footer-strip {
+  position:relative; z-index:1;
+  border-top:1.5px solid var(--border); background:var(--white);
+  padding:14px 32px; display:flex; align-items:center; justify-content:space-between;
+}
+.footer-brand { font-family:'Playfair Display',serif; font-weight:800; font-size:14px; color:var(--g700); }
+.footer-note  { font-size:11px; color:var(--text4); font-weight:500; }
+
+@media(max-width:960px){
+  .yard-grid{grid-template-columns:1fr;}
+  .kpi-row{grid-template-columns:repeat(3,1fr);}
+  main{padding:20px 16px;}
+  header{padding:0 16px;}
+}
 </style>
 </head>
 <body>
 
+<!-- ══ HEADER ══ -->
 <header>
-  <div class="logo">
-    <div class="logo-icon">CAD</div>
-    AutoCAD Tracker
-  </div>
-  <div class="header-divider"></div>
-  <span class="project-tag">PRODUCTION MANAGEMENT SYSTEM</span>
-  <div class="header-right">
-    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
-    <div class="mode-switcher">
-      <button class="mode-btn active" id="btn-yard" onclick="setMode('yard')">Yard</button>
-      <button class="mode-btn" id="btn-mid" onclick="setMode('midsection')">Midsection</button>
+  <div class="brand">
+    <div class="brand-logo"><span class="brand-logo-text">V</span></div>
+    <div>
+      <div class="brand-name">VID</div>
+      <div class="brand-sub">Engineering Solutions</div>
     </div>
-    <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
-      <svg id="refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+  </div>
+
+  <div class="header-sep"></div>
+  <span class="header-title">AutoCAD Production Tracker</span>
+
+  <div class="header-right">
+    <div class="live-pill">
+      <div class="live-dot"></div>
+      LIVE
+    </div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="btn-yard" onclick="setMode('yard')">Yard</button>
+      <button class="mode-tab" id="btn-mid"  onclick="setMode('midsection')">Midsection</button>
+    </div>
+    <button class="hdr-btn" id="refreshBtn" onclick="loadData()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <polyline points="23 4 23 10 17 10"/>
         <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
       </svg>
@@ -483,38 +653,57 @@
   </div>
 </header>
 
+<!-- ══ MAIN ══ -->
 <main>
-  <div class="stats-row">
-    <div class="stat-card" style="--card-accent:var(--accent)">
-      <div class="stat-label">Total Drawings</div>
-      <div class="stat-value" id="stat-total">—</div>
-      <div class="stat-sub">All entries</div>
+
+  <!-- KPI row -->
+  <div class="kpi-row">
+    <div class="kpi-card" style="--kpi-color:#2d9e2d;--kpi-bg:#f0faf0">
+      <div class="kpi-icon">🗂️</div>
+      <div class="kpi-label">Total Stations</div>
+      <div class="kpi-value" id="k-total">—</div>
+      <div class="kpi-sub">All entries</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-total" style="width:100%"></div></div>
     </div>
-    <div class="stat-card" style="--card-accent:#86efac">
-      <div class="stat-label">Completed</div>
-      <div class="stat-value" id="stat-done">—</div>
-      <div class="stat-sub" id="stat-done-pct">—</div>
+    <div class="kpi-card" style="--kpi-color:#10b981;--kpi-bg:#f0fdf4">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-label">Completed</div>
+      <div class="kpi-value" id="k-done">—</div>
+      <div class="kpi-sub" id="k-done-pct">—</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-done" style="width:0%;background:#10b981"></div></div>
     </div>
-    <div class="stat-card" style="--card-accent:#4ade80">
-      <div class="stat-label">In Progress</div>
-      <div class="stat-value" id="stat-wip">—</div>
-      <div class="stat-sub">Active work</div>
+    <div class="kpi-card" style="--kpi-color:#2d9e2d;--kpi-bg:#f0faf0">
+      <div class="kpi-icon">⚙️</div>
+      <div class="kpi-label">In Progress</div>
+      <div class="kpi-value" id="k-wip">—</div>
+      <div class="kpi-sub">Active work</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-wip" style="width:0%"></div></div>
     </div>
-    <div class="stat-card" style="--card-accent:#fbbf24">
-      <div class="stat-label">In Review</div>
-      <div class="stat-value" id="stat-rev">—</div>
-      <div class="stat-sub">Pending check</div>
+    <div class="kpi-card" style="--kpi-color:#f59e0b;--kpi-bg:#fffbeb">
+      <div class="kpi-icon">🔍</div>
+      <div class="kpi-label">In Review</div>
+      <div class="kpi-value" id="k-rev">—</div>
+      <div class="kpi-sub">Pending check</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-rev" style="width:0%;background:#f59e0b"></div></div>
     </div>
-    <div class="stat-card" style="--card-accent:#f87171">
-      <div class="stat-label">Not Started</div>
-      <div class="stat-value" id="stat-ns">—</div>
-      <div class="stat-sub">Backlog</div>
+    <div class="kpi-card" style="--kpi-color:#94a3b8;--kpi-bg:#f8fafc">
+      <div class="kpi-icon">📋</div>
+      <div class="kpi-label">Not Started</div>
+      <div class="kpi-value" id="k-ns">—</div>
+      <div class="kpi-sub">Backlog</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-ns" style="width:0%;background:#94a3b8"></div></div>
     </div>
   </div>
 
+  <!-- Toolbar -->
   <div class="toolbar">
-    <input class="search-box" id="searchInput" placeholder="🔍  Search drawings, titles…" oninput="filterData()">
-    <select class="filter-select" id="filterStatus" onchange="filterData()">
+    <div class="search-wrap">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="search-input" id="searchInput" placeholder="Search code or station…" oninput="applyFilters()">
+    </div>
+    <select class="tb-select" id="filterStatus" onchange="applyFilters()">
       <option value="">All Status</option>
       <option>Not Started</option>
       <option>In Progress</option>
@@ -522,57 +711,69 @@
       <option>Completed</option>
       <option>On Hold</option>
     </select>
-    <select class="filter-select" id="filterAssignee" onchange="filterData()">
+    <select class="tb-select" id="filterAssignee" onchange="applyFilters()">
       <option value="">All Assignees</option>
-      <option>Ananthan</option>
-      <option>Dinesh</option>
-      <option>Rishi</option>
-      <option>Praveen</option>
-      <option>Sajeev</option>
-      <option>Shruthi</option>
+      <option>Ananthan</option><option>Dinesh</option><option>Rishi</option>
+      <option>Praveen</option><option>Sajeev</option><option>Shruthi</option>
     </select>
-    <button class="btn-primary" onclick="openModal()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <select class="tb-select" id="filterWard" onchange="applyFilters()">
+      <option value="">All Wards</option>
+      <option>W1</option><option>W2</option><option>W3</option><option>W4</option>
+    </select>
+    <button class="btn-add" onclick="openModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
       Add Drawing
     </button>
   </div>
 
+  <!-- YARD VIEW -->
   <div id="yardView">
-    <div class="section-label">Yard Structure</div>
-    <div class="tree-container" id="treeContainer">
-      <div style="padding:40px;text-align:center;color:var(--text-muted);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;">
-        <span class="spinner"></span>LOADING STRUCTURE...
-      </div>
+    <div class="sec-label">Yard Structure — W1 · W2 · W3 · W4</div>
+    <div class="yard-grid" id="yardGrid">
+      <div class="loader"><div class="spin-ring"></div>Loading structure…</div>
     </div>
   </div>
 
+  <!-- MIDSECTION VIEW -->
   <div id="midsectionView" style="display:none;">
-    <div class="section-label">Midsection Drawings</div>
-    <div class="table-wrapper">
+    <div class="sec-label">Midsection Drawings</div>
+    <div class="table-card">
       <table>
         <thead>
           <tr>
-            <th style="width:120px">DWG NO.</th>
-            <th>TITLE</th>
-            <th style="width:170px">STATUS <span style="font-size:9px;opacity:.5;font-weight:400;">(click to edit)</span></th>
-            <th style="width:150px">ASSIGNEE</th>
-            <th style="width:120px">PROGRESS</th>
+            <th style="width:110px">DWG No.</th>
+            <th>Title</th>
+            <th style="width:180px">Status <span style="font-size:9px;opacity:.5;font-weight:500;">(click to edit)</span></th>
+            <th style="width:150px">Assignee</th>
+            <th style="width:110px">Progress</th>
           </tr>
         </thead>
         <tbody id="midTable">
-          <tr class="loading-row"><td colspan="5"><span class="spinner"></span>LOADING DATA...</td></tr>
+          <tr><td colspan="5"><div class="loader"><div class="spin-ring"></div>Loading data…</div></td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </main>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay">
+<!-- Footer -->
+<div class="footer-strip">
+  <div class="footer-brand">VID</div>
+  <div class="footer-note">AutoCAD Production Management System</div>
+  <div class="footer-note" id="lastRefreshed">—</div>
+</div>
+
+<!-- ══ ADD DRAWING MODAL ══ -->
+<div class="overlay" id="overlay">
   <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">Add New Drawing</span>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-hd">
+      <div class="modal-hd-inner">
+        <div class="modal-ttl">Add New Drawing</div>
+        <div class="modal-sub">Enter the drawing details below</div>
+      </div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
       <div class="field">
@@ -584,16 +785,20 @@
         <select id="inp-mode"><option>Yard</option><option>Midsection</option></select>
       </div>
       <div class="field full">
-        <label>Title</label>
-        <input id="inp-title" placeholder="Drawing title / description">
+        <label>Title / Station Name</label>
+        <input id="inp-title" placeholder="Drawing title or station name">
+      </div>
+      <div class="field">
+        <label>Ward</label>
+        <select id="inp-ward"><option>W1</option><option>W2</option><option>W3</option><option>W4</option></select>
       </div>
       <div class="field">
         <label>Section</label>
-        <input id="inp-section" placeholder="e.g. Section A">
+        <input id="inp-section" placeholder="e.g. MEJ-TEN">
       </div>
       <div class="field">
-        <label>Sub-section</label>
-        <input id="inp-sub" placeholder="e.g. MDU-NLL">
+        <label>Station Code</label>
+        <input id="inp-code" placeholder="e.g. NRK">
       </div>
       <div class="field">
         <label>Assignee</label>
@@ -610,340 +815,388 @@
         </select>
       </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-ft">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary" onclick="addDrawing()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      <button class="btn-add" style="margin-left:0;" onclick="addDrawing()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
         Submit
       </button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✓</span>
+  <span id="toast-msg"></span>
+</div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbxoz4-qTCrbMhDMRaw6ABxv1vADY9WINK-Sxw84-TCgFg4UU6qj-KeNwVduxIBAgA/exec";
+/* ══════════════════════════════════════
+   CONFIG
+══════════════════════════════════════ */
+const API = "https://script.google.com/macros/s/AKfycbxCHxCcVFjBV-kS5dN2E9_QWll83R0uayD6VAf4W6c4KoWjeZuP47pj_dirpUS5_Us80w/exec";
 
-let allData = [];
-let currentMode = 'yard';
-
-const AVATARS = {
-  Ananthan:'#16a34a', Dinesh:'#0d9488', Rishi:'#d97706',
-  Praveen:'#7c3aed', Sajeev:'#dc2626', Shruthi:'#db2777', Shurthi:'#db2777'
+/* ── TREE DEFINITION ── */
+const TREE = {
+  W1:{
+    label:"Tirunelveli Region",
+    sections:{
+      "MEJ-TEN":[{code:"NRK",name:"NARAIKKINAR"},{code:"GDN",name:"GANGAIKONDAN"},{code:"TAY",name:"TALAIYUTHU"},{code:"TEN",name:"TIRUNELVELI JN"}],
+      "TEN-TSI":[{code:"TYT",name:"TIRUNELVELI TOWN"},{code:"PEA",name:"PETTAI"},{code:"SMD",name:"CHERANMAHADEVI"},{code:"KARK",name:"KARRAIKKURICHICHI"},{code:"VVR",name:"VIRAVANALLUR"},{code:"KIC",name:"KALLIDAIKURICHI"},{code:"ASD",name:"AMBASAMUDRAM"},{code:"KIB",name:"KIZHA AMBUR"},{code:"AZK",name:"AZHWARKURICHI"},{code:"RVS",name:"RAVANASAMUDRAM"},{code:"KKY",name:"KILAKADAIYAM"}],
+      "TEN-TCN":[{code:"KZY",name:"KAYALPATTINAM"},{code:"PCO",name:"PALAYANKOTTAI"},{code:"SDNR",name:"SEYDUNGANALLUR"},{code:"TTQ",name:"THATHANKULAM"},{code:"SVV",name:"SRIVAIKUNTAM"},{code:"AWT",name:"ALWAR TIRUNAGARI"},{code:"NZT",name:"NAZARETH"},{code:"KCHV",name:"KACHCHANAVILAI"},{code:"KZB",name:"KURUMBUR"},{code:"ANY",name:"ARUMUGANERI"},{code:"TCN",name:"TIRUCHENDUR"}]
+    }
+  },
+  W2:{
+    label:"Tuticorin Region",
+    sections:{
+      "NLL-TN":[{code:"MMDR",name:"MELMARUDUR"},{code:"KPM",name:"KUMARAPURAM"},{code:"KDU",name:"KADAMBUR"},{code:"MEJ",name:"VANCHI MANIYACHCHI JN"},{code:"KLPM",name:"KAILASAPURAM"},{code:"TIP",name:"TATTAPPARAI"},{code:"MVN",name:"MILAVITTAN"},{code:"TN",name:"TUTICORIN JN"},{code:"TME",name:"TUTIMELUR"},{code:"NLL",name:"NALLI"},{code:"CVP",name:"KOVILPATTI"}]
+    }
+  },
+  W3:{
+    label:"Madurai Region",
+    sections:{
+      "MDU-NLL":[{code:"TY",name:"TULIKAPATTI"},{code:"SRT",name:"SATTUR"}],
+      "VPT-SNKL":[{code:"KDNL",name:"KADAYANALLUR"},{code:"PBKS",name:"PAMBAKOVIL SHANDY"},{code:"SNKL",name:"SANKARANKOVIL"},{code:"SCT",name:"SENGOTTAI"},{code:"TSI",name:"TENKASI JN"}]
+    }
+  },
+  W4:{
+    label:"Extension",
+    sections:{
+      "TSI-PUU":[],
+      "PUU-QLN":[]
+    }
+  }
 };
 
-const STATUS_MAP = {
-  'Not Started':'not-started','In Progress':'in-progress',
-  'Review':'review','Completed':'completed','On Hold':'on-hold'
-};
+const FLAT = [];
+for(const w in TREE) for(const s in TREE[w].sections) for(const st of TREE[w].sections[s]) FLAT.push({ward:w,section:s,...st});
 
-const PROGRESS_MAP = {
-  'Not Started':0,'In Progress':45,'Review':75,'Completed':100,'On Hold':20
-};
-
-const STATUS_DOT = {
-  'Not Started':'#4d7a5e','In Progress':'#22c55e',
-  'Review':'#fbbf24','Completed':'#86efac','On Hold':'#f87171'
-};
-
+/* ── CONSTANTS ── */
+const AVATARS = {Ananthan:'#16a34a',Dinesh:'#0d9488',Rishi:'#d97706',Praveen:'#7c3aed',Sajeev:'#dc2626',Shruthi:'#db2777',Shurthi:'#db2777'};
+const SMAP = {'Not Started':'not-started','In Progress':'in-progress','Review':'review','Completed':'completed','On Hold':'on-hold'};
+const PROG = {'Not Started':0,'In Progress':45,'Review':75,'Completed':100,'On Hold':20};
+const SDOT = {'Not Started':'#aaa','In Progress':'#2d9e2d','Review':'#f59e0b','Completed':'#10b981','On Hold':'#f43f5e'};
 const STATUSES = ['Not Started','In Progress','Review','Completed','On Hold'];
 
-/* ── MODE ── */
-function setMode(m) {
-  currentMode = m;
-  document.getElementById('btn-yard').classList.toggle('active', m==='yard');
-  document.getElementById('btn-mid').classList.toggle('active', m==='midsection');
-  document.getElementById('yardView').style.display = m==='yard' ? '' : 'none';
-  document.getElementById('midsectionView').style.display = m==='midsection' ? '' : 'none';
-  renderCurrent();
+/* ── STATE ── */
+let sheetData=[], currentMode='yard', _uid=0;
+
+/* ══ MODE ══ */
+function setMode(m){
+  currentMode=m;
+  document.getElementById('btn-yard').classList.toggle('active',m==='yard');
+  document.getElementById('btn-mid').classList.toggle('active',m==='midsection');
+  document.getElementById('yardView').style.display=m==='yard'?'':'none';
+  document.getElementById('midsectionView').style.display=m==='midsection'?'':'none';
+  render();
 }
 
-/* ── LOAD ── */
-async function loadData() {
-  const btn = document.getElementById('refreshBtn');
+/* ══ LOAD ══ */
+async function loadData(){
+  const btn=document.getElementById('refreshBtn');
   btn.classList.add('spinning');
-  document.getElementById('treeContainer').innerHTML =
-    `<div style="padding:40px;text-align:center;color:var(--text-muted);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;"><span class="spinner"></span>LOADING...</div>`;
-  document.getElementById('midTable').innerHTML =
-    `<tr class="loading-row"><td colspan="5"><span class="spinner"></span>LOADING DATA...</td></tr>`;
-  try {
-    const res = await fetch(API + '?t=' + Date.now());
-    allData = await res.json();
-    updateStats(); renderCurrent();
-    showToast('✓ Data refreshed');
-  } catch(e) {
-    showToast('Connection error', true);
-  } finally {
+  document.getElementById('yardGrid').innerHTML=`<div class="loader"><div class="spin-ring"></div>Loading structure…</div>`;
+  document.getElementById('midTable').innerHTML=`<tr><td colspan="5"><div class="loader"><div class="spin-ring"></div>Loading data…</div></td></tr>`;
+  try{
+    const res=await fetch(API+'?t='+Date.now());
+    sheetData=await res.json();
+    updateKPIs(); render();
+    const now=new Date();
+    document.getElementById('lastRefreshed').textContent='Updated '+now.toLocaleTimeString();
+    showToast('Data refreshed successfully','✓');
+  }catch(e){
+    showToast('Connection error — showing structure only','⚠',true);
+    sheetData=[];
+    updateKPIs(); render();
+  }finally{
     btn.classList.remove('spinning');
   }
 }
 
-/* ── UPDATE STATUS → GOOGLE SHEET ── */
-async function updateStatus(drawingNumber, newStatus) {
-  // Optimistic update
-  const item = allData.find(d => (d.Number||'') === drawingNumber);
-  const oldStatus = item ? item.Status : '';
-  if (item) item.Status = newStatus;
-  updateStats();
-  renderCurrent();
-
-  try {
-    const response = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'updateStatus',
-        number: drawingNumber,
-        status: newStatus
-      })
-    });
-    showToast(`✓ "${drawingNumber}" → ${newStatus}`);
-  } catch(e) {
-    // Revert
-    if (item) item.Status = oldStatus;
-    showToast('Failed to save status', true);
-    updateStats(); renderCurrent();
+/* ══ STATUS UPDATE → SHEET ══ */
+async function updateStatus(code, newStatus){
+  let row=sheetData.find(d=>(d.Code||d.Number||'').toUpperCase()===code.toUpperCase());
+  const old=row?row.Status:'Not Started';
+  if(row) row.Status=newStatus;
+  else{ row={Code:code,Number:code,Status:newStatus,Assignee:''}; sheetData.push(row); }
+  updateKPIs(); render();
+  try{
+    await fetch(API,{method:'POST',body:JSON.stringify({action:'updateStatus',code,status:newStatus})});
+    showToast(`${code} → ${newStatus}`,'✓');
+  }catch(e){
+    if(row) row.Status=old;
+    showToast('Failed to save status','✕',true);
+    updateKPIs(); render();
   }
 }
 
-/* ── STATS ── */
-function updateStats() {
-  const t = allData.length;
-  const done = allData.filter(d=>d.Status==='Completed').length;
-  const wip  = allData.filter(d=>d.Status==='In Progress').length;
-  const rev  = allData.filter(d=>d.Status==='Review').length;
-  const ns   = allData.filter(d=>d.Status==='Not Started').length;
-  document.getElementById('stat-total').textContent = t;
-  document.getElementById('stat-done').textContent  = done;
-  document.getElementById('stat-done-pct').textContent = t ? Math.round(done/t*100)+'% complete' : '0%';
-  document.getElementById('stat-wip').textContent   = wip;
-  document.getElementById('stat-rev').textContent   = rev;
-  document.getElementById('stat-ns').textContent    = ns;
+/* ══ KPIs ══ */
+function updateKPIs(){
+  const t=sheetData.length||FLAT.length;
+  const done=sheetData.filter(d=>d.Status==='Completed').length;
+  const wip =sheetData.filter(d=>d.Status==='In Progress').length;
+  const rev =sheetData.filter(d=>d.Status==='Review').length;
+  const ns  =sheetData.length?(sheetData.filter(d=>d.Status==='Not Started').length):(FLAT.length);
+  const pct =t?Math.round(done/t*100):0;
+  document.getElementById('k-total').textContent=t;
+  document.getElementById('k-done').textContent=done;
+  document.getElementById('k-done-pct').textContent=pct+'% complete';
+  document.getElementById('k-wip').textContent=wip;
+  document.getElementById('k-rev').textContent=rev;
+  document.getElementById('k-ns').textContent=ns;
+  document.getElementById('kb-done').style.width=pct+'%';
+  document.getElementById('kb-wip').style.width=(t?Math.round(wip/t*100):0)+'%';
+  document.getElementById('kb-rev').style.width=(t?Math.round(rev/t*100):0)+'%';
+  document.getElementById('kb-ns').style.width=(t?Math.round(ns/t*100):0)+'%';
 }
 
-function renderCurrent() {
-  if (currentMode==='yard') renderYard(); else renderMidsection();
+/* ══ FILTERS ══ */
+function getF(){ return {
+  q:document.getElementById('searchInput').value.toLowerCase().trim(),
+  status:document.getElementById('filterStatus').value,
+  assignee:document.getElementById('filterAssignee').value,
+  ward:document.getElementById('filterWard').value
+};}
+function applyFilters(){ updateKPIs(); render(); }
+
+function stnOk(stn,row,f){
+  if(f.q && !stn.code.toLowerCase().includes(f.q) && !stn.name.toLowerCase().includes(f.q)) return false;
+  const st=row?row.Status:'Not Started';
+  if(f.status && st!==f.status) return false;
+  const as=row?row.Assignee:'';
+  if(f.assignee && as!==f.assignee) return false;
+  return true;
 }
 
-function getFiltered() {
-  const search   = document.getElementById('searchInput').value.toLowerCase();
-  const status   = document.getElementById('filterStatus').value;
-  const assignee = document.getElementById('filterAssignee').value;
-  return allData.filter(d => {
-    const ms  = !search || (d.Number||'').toLowerCase().includes(search) || (d.Title||'').toLowerCase().includes(search);
-    const mst = !status || d.Status===status;
-    const ma  = !assignee || d.Assignee===assignee;
-    return ms && mst && ma;
-  });
-}
+function getRow(code){ return sheetData.find(d=>(d.Code||d.Number||'').toUpperCase()===code.toUpperCase())||null; }
 
-function filterData() { updateStats(); renderCurrent(); }
+/* ══ RENDER ══ */
+function render(){ if(currentMode==='yard') renderYard(); else renderMidsection(); }
 
-/* ── STATUS BADGE HTML ── */
-let _uid = 0;
-function statusBadgeHtml(d) {
-  const uid = 'sb' + (++_uid);
-  const bClass = STATUS_MAP[d.Status] || 'not-started';
-  const num = (d.Number||'').replace(/['"\\]/g,'');
-  return `<div class="status-cell" id="cell-${uid}">
-    <span class="badge badge-${bClass}" onclick="togglePopup('${uid}')">
-      <span class="badge-dot"></span>${d.Status||'Not Started'} ▾
-    </span>
-    <div class="status-popup" id="popup-${uid}">
-      ${STATUSES.map(s=>`
-        <div class="status-option ${s===d.Status?'active':''}"
-             onclick="pickStatus('${uid}','${num}','${s}',event)">
-          <span class="opt-dot" style="background:${STATUS_DOT[s]}"></span>${s}
-        </div>`).join('')}
-    </div>
-  </div>`;
-}
+/* ── YARD ── */
+function renderYard(){
+  _uid=0;
+  const f=getF();
+  const grid=document.getElementById('yardGrid');
+  let html='';
 
-function togglePopup(uid) {
-  const p = document.getElementById('popup-'+uid);
-  if (!p) return;
-  const wasOpen = p.classList.contains('open');
-  closeAllPopups();
-  if (!wasOpen) p.classList.add('open');
-}
+  for(const wk in TREE){
+    if(f.ward && f.ward!==wk) continue;
+    const W=TREE[wk];
+    let bodyHtml=''; let wardTotal=0;
 
-function closeAllPopups() {
-  document.querySelectorAll('.status-popup.open').forEach(p=>p.classList.remove('open'));
-}
+    for(const sk in W.sections){
+      const stns=W.sections[sk];
+      let childHtml=''; let visible=0; let done=0;
 
-document.addEventListener('click', e => {
-  if (!e.target.closest('.status-cell')) closeAllPopups();
-});
-
-function pickStatus(uid, drawingNumber, newStatus, e) {
-  e.stopPropagation();
-  closeAllPopups();
-  updateStatus(drawingNumber, newStatus);
-}
-
-/* ── YARD TREE ── */
-function renderYard() {
-  _uid = 0;
-  const data = getFiltered().filter(d => !d.Mode || d.Mode==='Yard');
-  const container = document.getElementById('treeContainer');
-  if (!data.length) {
-    container.innerHTML = `<div class="empty-state"><p>NO YARD DRAWINGS FOUND</p></div>`;
-    return;
-  }
-  const tree = {};
-  data.forEach(d => {
-    const sec = d.Section || 'Unassigned';
-    const sub = d.SubSection || d['Sub-section'] || d.Sub || 'General';
-    if (!tree[sec]) tree[sec] = {};
-    if (!tree[sec][sub]) tree[sec][sub] = [];
-    tree[sec][sub].push(d);
-  });
-
-  let html = '';
-  for (const sec in tree) {
-    const secCount = Object.values(tree[sec]).flat().length;
-    const secId = 'sec-' + sec.replace(/[\s\W]+/g,'_');
-    html += `<div class="tree-node">
-      <div class="tree-section-header" onclick="toggleNode('${secId}')">
-        <div class="tree-toggle" id="tog-${secId}">▶</div>
-        <span class="tree-section-name">${sec}</span>
-        <span class="tree-count">${secCount} DWGs</span>
-        ${sectionBadges(Object.values(tree[sec]).flat())}
-      </div>
-      <div class="tree-children" id="${secId}">`;
-    for (const sub in tree[sec]) {
-      const items = tree[sec][sub];
-      const subId = secId + '-' + sub.replace(/[\s\W]+/g,'_');
-      html += `<div class="tree-node">
-          <div class="tree-sub-header" onclick="toggleNode('${subId}')">
-            <div class="tree-connector"></div>
-            <div class="tree-toggle" id="tog-${subId}" style="width:14px;height:14px;font-size:9px;">▶</div>
-            <span class="tree-sub-name">${sub}</span>
-            <span class="tree-count" style="font-size:10px;">${items.length}</span>
-            ${sectionBadges(items)}
-          </div>
-          <div class="tree-sub-children" id="${subId}">
-            ${items.map(d=>buildLeaf(d)).join('')}
-          </div>
+      if(stns.length===0){
+        childHtml=`<div class="stn-row" style="opacity:.45;">
+          <div class="stn-bullet" style="background:#ddd"></div>
+          <span class="stn-code" style="color:#ccc">—</span>
+          <span class="stn-name" style="color:#bbb;font-style:italic;">No stations defined yet</span>
         </div>`;
+        visible=1;
+      } else {
+        for(const stn of stns){
+          const row=getRow(stn.code);
+          if(!stnOk(stn,row,f)) continue;
+          const st=row?row.Status:'Not Started';
+          if(st==='Completed') done++;
+          visible++; wardTotal++;
+          childHtml+=buildStn(stn,row);
+        }
+      }
+      if(visible===0) continue;
+
+      const sid='sec-'+wk+'-'+sk.replace(/\W/g,'_');
+      const pct=stns.length?Math.round(done/stns.length*100):0;
+      bodyHtml+=`
+      <div class="sec-row">
+        <div class="sec-head" onclick="toggleSec('${sid}')">
+          <span class="sec-code-tag">${sk}</span>
+          <div class="sec-mini-progress">
+            <div class="sec-prog-bar"><div class="sec-prog-fill" style="width:${pct}%"></div></div>
+            <span class="sec-prog-pct">${pct}%</span>
+          </div>
+          <span class="sec-count">${visible}</span>
+          <span class="sec-toggle" id="stog-${sid}">▸</span>
+        </div>
+        <div class="sec-children" id="${sid}">${childHtml}</div>
+      </div>`;
     }
-    html += `</div></div>`;
+
+    if(!bodyHtml) continue;
+
+    const wid='ward-'+wk;
+    const routes=Object.keys(W.sections).join(' · ');
+    html+=`
+    <div class="ward-card">
+      <div class="ward-head" onclick="toggleWard('${wid}')">
+        <div class="ward-num">${wk}</div>
+        <div class="ward-info">
+          <div class="ward-region">${W.label}</div>
+          <div class="ward-route">${routes}</div>
+        </div>
+        <span class="ward-pill">${wardTotal} stns</span>
+        <div class="ward-chevron" id="wchev-${wid}">▸</div>
+      </div>
+      <div class="ward-body" id="${wid}">${bodyHtml}</div>
+    </div>`;
   }
-  container.innerHTML = html;
+
+  grid.innerHTML = html || `<div class="empty-msg">No results found</div>`;
 }
 
-function sectionBadges(items) {
-  const counts = {};
-  items.forEach(d => { counts[d.Status] = (counts[d.Status]||0)+1; });
-  return Object.entries(counts).slice(0,3).map(([s,c]) =>
-    `<span class="badge badge-${STATUS_MAP[s]||'not-started'}" style="font-size:9px;padding:2px 7px;pointer-events:none;cursor:default;">${c} ${s}</span>`
-  ).join(' ');
-}
+function buildStn(stn,row){
+  const st    = row?row.Status:'Not Started';
+  const asgn  = row?row.Assignee:'';
+  const bClass= SMAP[st]||'not-started';
+  const color = AVATARS[asgn]||'#1f7a1f';
+  const init  = asgn?asgn[0].toUpperCase():'?';
+  const prog  = PROG[st]||0;
+  const uid   = 'u'+(++_uid);
+  const code  = stn.code.replace(/['"\\]/g,'');
 
-function buildLeaf(d) {
-  const color = AVATARS[d.Assignee] || '#16a34a';
-  const init  = (d.Assignee||'?')[0].toUpperCase();
-  const prog  = PROGRESS_MAP[d.Status] || 0;
-  return `<div class="tree-leaf">
-    <div class="tree-leaf-connector"></div>
-    <span class="drawing-num" style="width:120px;flex-shrink:0;">${d.Number||'—'}</span>
-    <span class="drawing-title" style="flex:1;font-size:12px;">${d.Title||'—'}</span>
-    ${statusBadgeHtml(d)}
-    <div class="assignee-chip" style="margin-left:8px;">
-      <div class="avatar" style="background:${color}">${init}</div>
-      <span style="font-size:11px;">${d.Assignee||'—'}</span>
+  return `
+  <div class="stn-row">
+    <div class="stn-bullet"></div>
+    <span class="stn-code">${stn.code}</span>
+    <span class="stn-name" title="${stn.name}">${stn.name}</span>
+    <div class="status-cell" id="sc-${uid}">
+      <span class="s-badge s-${bClass}" onclick="togglePop('${uid}')">
+        <span class="s-dot"></span>${st}
+      </span>
+      <div class="s-popup" id="pop-${uid}">
+        ${STATUSES.map(s=>`<div class="s-opt ${s===st?'active':''}" onclick="pickSt('${uid}','${code}','${s}',event)">
+          <span class="s-opt-dot" style="background:${SDOT[s]}"></span>${s}</div>`).join('')}
+      </div>
     </div>
-    <div class="progress-bar" style="width:70px;margin-left:8px;" title="${prog}%">
-      <div class="progress-fill" style="width:${prog}%"></div>
-    </div>
+    ${asgn?`<div class="a-chip"><div class="a-avatar" style="background:${color}">${init}</div>${asgn}</div>`:''}
+    <div class="mini-prog"><div class="mini-prog-fill" style="width:${prog}%"></div></div>
   </div>`;
 }
 
-function toggleNode(id) {
-  const el = document.getElementById(id);
-  const tog = document.getElementById('tog-'+id);
-  if (!el) return;
-  const isOpen = el.classList.toggle('open');
-  if (tog) tog.textContent = isOpen ? '▼' : '▶';
+function toggleWard(id){
+  const el=document.getElementById(id);
+  const ch=document.getElementById('wchev-'+id);
+  const open=el.classList.toggle('open');
+  if(ch){ch.textContent=open?'▾':'▸'; ch.classList.toggle('open',open);}
 }
 
-/* ── MIDSECTION TABLE ── */
-function renderMidsection() {
-  _uid = 0;
-  const data = getFiltered().filter(d => !d.Mode || d.Mode==='Midsection');
-  const tbody = document.getElementById('midTable');
-  if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><p>NO MIDSECTION DRAWINGS FOUND</p></div></td></tr>`;
+function toggleSec(id){
+  const el=document.getElementById(id);
+  const tog=document.getElementById('stog-'+id);
+  const open=el.classList.toggle('open');
+  if(tog){tog.textContent=open?'▾':'▸'; tog.classList.toggle('open',open);}
+}
+
+/* ── STATUS POPUP ── */
+function togglePop(uid){
+  const p=document.getElementById('pop-'+uid);
+  if(!p)return;
+  const was=p.classList.contains('open');
+  closeAllPops();
+  if(!was) p.classList.add('open');
+}
+function closeAllPops(){ document.querySelectorAll('.s-popup.open').forEach(p=>p.classList.remove('open')); }
+document.addEventListener('click',e=>{ if(!e.target.closest('.status-cell')) closeAllPops(); });
+function pickSt(uid,code,status,e){
+  e.stopPropagation(); closeAllPops(); updateStatus(code,status);
+}
+
+/* ── MIDSECTION ── */
+function renderMidsection(){
+  _uid=0;
+  const f=getF();
+  const data=sheetData.filter(d=>{
+    if(d.Mode&&d.Mode!=='Midsection') return false;
+    const ms=!f.q||(d.Number||'').toLowerCase().includes(f.q)||(d.Title||'').toLowerCase().includes(f.q);
+    return ms && (!f.status||d.Status===f.status) && (!f.assignee||d.Assignee===f.assignee);
+  });
+  const tbody=document.getElementById('midTable');
+  if(!data.length){
+    tbody.innerHTML=`<tr><td colspan="5"><div class="empty-msg">No midsection drawings found</div></td></tr>`;
     return;
   }
-  tbody.innerHTML = data.map(d => {
-    const color = AVATARS[d.Assignee] || '#16a34a';
-    const init  = (d.Assignee||'?')[0].toUpperCase();
-    const prog  = PROGRESS_MAP[d.Status] || 0;
+  tbody.innerHTML=data.map(d=>{
+    const color=AVATARS[d.Assignee]||'#1f7a1f';
+    const init=(d.Assignee||'?')[0].toUpperCase();
+    const prog=PROG[d.Status]||0;
+    const uid='u'+(++_uid);
+    const bClass=SMAP[d.Status]||'not-started';
+    const code=(d.Code||d.Number||'').replace(/['"\\]/g,'');
     return `<tr>
-      <td><span class="drawing-num">${d.Number||'—'}</span></td>
-      <td><span class="drawing-title">${d.Title||'—'}</span></td>
-      <td>${statusBadgeHtml(d)}</td>
+      <td><span class="t-num">${d.Number||d.Code||'—'}</span></td>
+      <td><span class="t-title">${d.Title||d.Name||'—'}</span></td>
       <td>
-        <div class="assignee-chip">
-          <div class="avatar" style="background:${color}">${init}</div>
+        <div class="status-cell" id="sc-${uid}">
+          <span class="s-badge s-${bClass}" onclick="togglePop('${uid}')">
+            <span class="s-dot"></span>${d.Status||'Not Started'}
+          </span>
+          <div class="s-popup" id="pop-${uid}">
+            ${STATUSES.map(s=>`<div class="s-opt ${s===d.Status?'active':''}" onclick="pickSt('${uid}','${code}','${s}',event)">
+              <span class="s-opt-dot" style="background:${SDOT[s]}"></span>${s}</div>`).join('')}
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="a-chip">
+          <div class="a-avatar" style="background:${color}">${init}</div>
           ${d.Assignee||'—'}
         </div>
       </td>
       <td>
         <div style="display:flex;align-items:center;gap:8px;">
-          <div class="progress-bar" style="width:64px;">
-            <div class="progress-fill" style="width:${prog}%"></div>
+          <div style="flex:1;height:4px;background:var(--off3);border-radius:2px;overflow:hidden;max-width:70px;">
+            <div style="height:100%;width:${prog}%;background:var(--g500);border-radius:2px;transition:width .4s;"></div>
           </div>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);">${prog}%</span>
+          <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text4);">${prog}%</span>
         </div>
       </td>
     </tr>`;
   }).join('');
 }
 
-/* ── MODAL ── */
-function openModal() {
-  document.getElementById('inp-mode').value = currentMode==='yard' ? 'Yard' : 'Midsection';
-  document.getElementById('modalOverlay').classList.add('open');
+/* ══ MODAL ══ */
+function openModal(){
+  document.getElementById('inp-mode').value=currentMode==='yard'?'Yard':'Midsection';
+  document.getElementById('overlay').classList.add('open');
 }
-function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-document.getElementById('modalOverlay').addEventListener('click', e => {
-  if (e.target===document.getElementById('modalOverlay')) closeModal();
-});
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); }
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('overlay')) closeModal(); });
 
-async function addDrawing() {
-  const number   = document.getElementById('inp-num').value.trim();
-  const title    = document.getElementById('inp-title').value.trim();
-  const assignee = document.getElementById('inp-assignee').value;
-  const status   = document.getElementById('inp-status').value;
-  const section  = document.getElementById('inp-section').value.trim();
-  const sub      = document.getElementById('inp-sub').value.trim();
-  const mode     = document.getElementById('inp-mode').value;
-  if (!number || !title) { showToast('Number & title required', true); return; }
-  try {
-    await fetch(API, {
-      method:'POST',
-      body: JSON.stringify({ action:'add', number, title, status, assignee, section, subsection:sub, mode })
-    });
+async function addDrawing(){
+  const number=document.getElementById('inp-num').value.trim();
+  const title=document.getElementById('inp-title').value.trim();
+  const code=document.getElementById('inp-code').value.trim();
+  const assignee=document.getElementById('inp-assignee').value;
+  const status=document.getElementById('inp-status').value;
+  const section=document.getElementById('inp-section').value.trim();
+  const ward=document.getElementById('inp-ward').value;
+  const mode=document.getElementById('inp-mode').value;
+  if(!title){ showToast('Station name / title is required','⚠',true); return; }
+  try{
+    await fetch(API,{method:'POST',body:JSON.stringify({action:'add',number,title,code,status,assignee,section,ward,mode})});
     closeModal();
-    showToast('✓ Drawing added');
+    showToast('Drawing added successfully','✓');
     loadData();
-  } catch(e) { showToast('Failed to add drawing', true); }
+  }catch(e){ showToast('Failed to add drawing','✕',true); }
 }
 
-/* ── TOAST ── */
-function showToast(msg, isError=false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.borderLeftColor = isError ? 'var(--danger)' : 'var(--accent)';
-  t.style.boxShadow = isError
-    ? '0 8px 32px rgba(0,0,0,.5), 0 0 16px rgba(248,113,113,.2)'
-    : '0 8px 32px rgba(0,0,0,.5), 0 0 16px var(--accent-glow)';
+/* ══ TOAST ══ */
+function showToast(msg,icon='✓',isErr=false){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  document.getElementById('toast-icon').textContent=icon;
+  t.style.borderLeftColor=isErr?'#f43f5e':'#2d9e2d';
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3000);
+  setTimeout(()=>t.classList.remove('show'),3200);
 }
 
+/* init */
 loadData();
 </script>
 </body>
