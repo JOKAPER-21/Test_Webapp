@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Drawing Tracker</title>
+</head>
+
+<body>
+
+<h2>Drawing Tracker</h2>
+
+<input id="num" placeholder="Drawing number">
+<input id="title" placeholder="Title">
+<input id="assignee" placeholder="Assignee">
+
+<button onclick="addDrawing()">Add</button>
+
+<table border="1">
+<thead>
+<tr>
+<th>Number</th>
+<th>Title</th>
+<th>Status</th>
+<th>Assignee</th>
+</tr>
+</thead>
+
+<tbody id="table"></tbody>
+
+</table>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbxCHxCcVFjBV-kS5dN2E9_QWll83R0uayD6VAf4W6c4KoWjeZuP47pj_dirpUS5_Us80w/exec"
+
+async function loadData(){
+
+let res = await fetch(API)
+let data = await res.json()
+
+let html=""
+
+data.forEach(d=>{
+html+=`
+<tr>
+<td>${d.Number}</td>
+<td>${d.Title}</td>
+<td>${d.Status}</td>
+<td>${d.Assignee}</td>
+</tr>
+`
+})
+
+document.getElementById("table").innerHTML=html
+
+}
+
+async function addDrawing(){
+
+let number=document.getElementById("num").value
+let title=document.getElementById("title").value
+let assignee=document.getElementById("assignee").value
+
+await fetch(API,{
+method:"POST",
+body:JSON.stringify({
+number:number,
+title:title,
+status:"Not Started",
+assignee:assignee
+})
+})
+
+loadData()
+
+}
+
+loadData()
+
+</script>
+
+</body>
+</html>
