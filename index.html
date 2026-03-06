@@ -4,41 +4,40 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AutoCAD Production Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e17;
-    --surface: #0f1623;
-    --surface2: #151d2e;
-    --surface3: #1a2438;
-    --border: #1e2d45;
-    --border-active: #2a4a7f;
-    --accent: #1e6fff;
-    --accent2: #00c9a7;
-    --accent3: #f59e0b;
-    --text: #e2e8f0;
-    --text-muted: #64748b;
-    --text-dim: #94a3b8;
-    --danger: #ef4444;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --grid: rgba(30,111,255,0.04);
+    --bg:        #060e0a;
+    --surface:   #0b1610;
+    --surface2:  #0f1e15;
+    --surface3:  #142619;
+    --border:    #1a3324;
+    --border-active: #2a6644;
+    --accent:    #22c55e;
+    --accent-dark: #16a34a;
+    --accent2:   #4ade80;
+    --accent3:   #86efac;
+    --accent-glow: rgba(34,197,94,0.15);
+    --text:      #e2ffe9;
+    --text-muted:#4d7a5e;
+    --text-dim:  #7aad8a;
+    --danger:    #f87171;
+    --warning:   #fbbf24;
+    --grid:      rgba(34,197,94,0.03);
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
 
   body {
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* Grid background */
   body::before {
-    content:'';
-    position:fixed; inset:0;
+    content:''; position:fixed; inset:0;
     background-image:
       linear-gradient(var(--grid) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid) 1px, transparent 1px);
@@ -46,323 +45,282 @@
     pointer-events:none; z-index:0;
   }
 
-  /* Top bar */
   header {
-    position: sticky; top:0; z-index:100;
-    background: rgba(10,14,23,0.95);
-    backdrop-filter: blur(12px);
+    position:sticky; top:0; z-index:100;
+    background: rgba(6,14,10,0.96);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
     padding: 0 24px;
-    display: flex; align-items: center; gap: 20px;
-    height: 56px;
+    display:flex; align-items:center; gap:18px;
+    height:58px;
   }
 
   .logo {
-    display:flex; align-items:center; gap: 10px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700; font-size: 18px; letter-spacing: 2px;
-    text-transform: uppercase; color: var(--accent);
-    white-space: nowrap;
+    display:flex; align-items:center; gap:10px;
+    font-weight:800; font-size:16px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--accent);
+    white-space:nowrap;
   }
 
   .logo-icon {
-    width:28px; height:28px;
-    background: var(--accent);
-    clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 0 100%);
+    width:30px; height:30px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    clip-path: polygon(0 0, 72% 0, 100% 28%, 100% 100%, 0 100%);
     display:flex; align-items:center; justify-content:center;
-    font-size:10px; font-weight:800; color:#fff;
+    font-size:9px; font-weight:800; color:#fff; letter-spacing:0;
+    box-shadow: 0 0 14px var(--accent-glow);
   }
 
-  .header-divider { width:1px; height:28px; background:var(--border); }
+  .header-divider { width:1px; height:26px; background:var(--border); }
 
   .project-tag {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px; color: var(--text-muted);
-    letter-spacing: 1px;
+    font-family:'Share Tech Mono',monospace;
+    font-size:10px; color:var(--text-muted); letter-spacing:1.5px;
   }
 
-  .header-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+  .header-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
 
   .live-badge {
     display:flex; align-items:center; gap:6px;
-    font-size:11px; color:var(--accent2); letter-spacing:1px;
+    font-size:10px; color:var(--accent2); letter-spacing:1.5px;
     font-family:'Share Tech Mono',monospace;
   }
 
   .live-dot {
-    width:6px; height:6px; border-radius:50%;
+    width:7px; height:7px; border-radius:50%;
     background:var(--accent2);
     animation: pulse 2s infinite;
   }
 
   @keyframes pulse {
-    0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(0,201,167,0.4); }
-    50% { opacity:.6; box-shadow:0 0 0 4px rgba(0,201,167,0); }
+    0%,100%{ opacity:1; box-shadow:0 0 0 0 rgba(74,222,128,.5); }
+    50%    { opacity:.6; box-shadow:0 0 0 5px rgba(74,222,128,0); }
   }
 
   .refresh-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    padding: 6px 14px; border-radius:4px;
-    font-size:12px; cursor:pointer;
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:600; letter-spacing:1px;
-    transition: all .2s;
-    display:flex; align-items:center; gap:6px;
+    background:var(--surface2); border:1px solid var(--border);
+    color:var(--text-dim); padding:6px 14px; border-radius:6px;
+    font-size:11px; cursor:pointer; font-family:'Poppins',sans-serif;
+    font-weight:600; letter-spacing:.5px;
+    transition:all .2s; display:flex; align-items:center; gap:6px;
   }
-  .refresh-btn:hover { border-color:var(--accent); color:var(--accent); }
-  .refresh-btn.spinning svg { animation: spin 1s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .refresh-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-glow); }
+  .refresh-btn.spinning svg { animation:spin 1s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg);} }
 
-  /* Mode switcher */
   .mode-switcher {
-    display:flex; align-items:center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius:4px; overflow:hidden;
+    display:flex; background:var(--surface);
+    border:1px solid var(--border); border-radius:6px; overflow:hidden;
   }
 
   .mode-btn {
-    padding: 6px 20px;
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:600; font-size:13px; letter-spacing:1.5px;
+    padding:6px 18px; font-family:'Poppins',sans-serif;
+    font-weight:600; font-size:12px; letter-spacing:.5px;
     text-transform:uppercase; cursor:pointer; border:none;
     background:transparent; color:var(--text-muted);
-    transition: all .2s; position:relative;
+    transition:all .2s;
   }
+  .mode-btn.active { background:var(--accent); color:#040d07; }
 
-  .mode-btn.active {
-    background: var(--accent);
-    color: #fff;
-  }
-
-  /* Main layout */
   main {
     position:relative; z-index:1;
-    padding: 20px 24px;
-    max-width: 1600px; margin:0 auto;
+    padding:20px 24px; max-width:1600px; margin:0 auto;
   }
 
-  /* Stats row */
   .stats-row {
     display:grid; grid-template-columns:repeat(5,1fr); gap:12px;
     margin-bottom:20px;
   }
 
   .stat-card {
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:6px; padding:14px 16px;
-    position:relative; overflow:hidden;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:14px 16px;
+    position:relative; overflow:hidden; transition:border-color .2s;
   }
+  .stat-card:hover { border-color:var(--border-active); }
 
   .stat-card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:2px;
-    background: var(--accent-color, var(--accent));
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:var(--card-accent, var(--accent));
+    box-shadow: 0 0 10px var(--card-accent, var(--accent));
   }
 
   .stat-label {
-    font-size:10px; letter-spacing:2px; text-transform:uppercase;
-    color:var(--text-muted); margin-bottom:8px;
-    font-family:'Barlow Condensed',sans-serif; font-weight:600;
+    font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--text-muted); margin-bottom:8px; font-weight:600;
   }
 
   .stat-value {
     font-family:'Share Tech Mono',monospace;
-    font-size:28px; color:var(--text); line-height:1;
+    font-size:30px; line-height:1;
+    color:var(--card-accent, var(--accent));
   }
 
-  .stat-sub {
-    font-size:11px; color:var(--text-muted); margin-top:4px;
-  }
+  .stat-sub { font-size:10px; color:var(--text-muted); margin-top:5px; font-weight:500; }
 
-  /* Toolbar */
   .toolbar {
     display:flex; align-items:center; gap:10px;
-    margin-bottom:16px;
-    flex-wrap:wrap;
+    margin-bottom:16px; flex-wrap:wrap;
   }
 
   .search-box {
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:4px; padding:8px 14px;
-    color:var(--text); font-size:13px;
-    font-family:'Barlow',sans-serif;
-    width:220px; outline:none;
-    transition:border-color .2s;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; padding:8px 14px; color:var(--text);
+    font-size:12px; font-family:'Poppins',sans-serif;
+    width:230px; outline:none; transition:all .2s;
   }
   .search-box::placeholder { color:var(--text-muted); }
-  .search-box:focus { border-color:var(--accent); }
+  .search-box:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
 
   .filter-select {
-    background:var(--surface);
-    border:1px solid var(--border);
-    color:var(--text); font-size:12px;
-    padding:8px 12px; border-radius:4px;
-    outline:none; cursor:pointer;
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:600; letter-spacing:.5px;
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--text); font-size:11px;
+    padding:8px 12px; border-radius:6px; outline:none; cursor:pointer;
+    font-family:'Poppins',sans-serif; font-weight:600;
     transition:border-color .2s;
   }
   .filter-select:focus { border-color:var(--accent); }
 
   .btn-primary {
-    background: var(--accent);
-    border:none; color:#fff;
-    padding:8px 18px; border-radius:4px;
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:700; font-size:13px; letter-spacing:1.5px;
-    text-transform:uppercase; cursor:pointer;
+    background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border:none; color:#040d07; padding:8px 18px; border-radius:6px;
+    font-family:'Poppins',sans-serif; font-weight:700; font-size:12px;
+    letter-spacing:.5px; text-transform:uppercase; cursor:pointer;
     transition:all .2s; margin-left:auto;
     display:flex; align-items:center; gap:6px;
+    box-shadow:0 0 16px var(--accent-glow);
   }
-  .btn-primary:hover { background:#1459d4; }
+  .btn-primary:hover { filter:brightness(1.1); box-shadow:0 0 24px rgba(34,197,94,.35); }
 
-  /* Table */
   .table-wrapper {
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:8px; overflow:hidden;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; overflow:hidden;
   }
 
-  table {
-    width:100%; border-collapse:collapse;
-  }
-
-  thead {
-    background:var(--surface2);
-    border-bottom:1px solid var(--border);
-  }
+  table { width:100%; border-collapse:collapse; }
+  thead { background:var(--surface2); border-bottom:1px solid var(--border); }
 
   th {
     padding:11px 14px; text-align:left;
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:600; font-size:11px;
+    font-weight:700; font-size:10px;
     letter-spacing:1.5px; text-transform:uppercase;
     color:var(--text-muted); white-space:nowrap;
   }
 
-  tr {
-    border-bottom:1px solid var(--border);
-    transition:background .15s;
-  }
+  tr { border-bottom:1px solid var(--border); transition:background .15s; }
   tbody tr:last-child { border-bottom:none; }
   tbody tr:hover { background:var(--surface2); }
-
-  td {
-    padding:11px 14px; font-size:13px;
-    vertical-align:middle;
-  }
+  td { padding:10px 14px; font-size:12px; vertical-align:middle; }
 
   .drawing-num {
-    font-family:'Share Tech Mono',monospace;
-    font-size:12px; color:var(--accent);
-    letter-spacing:.5px;
+    font-family:'Share Tech Mono',monospace; font-size:11px;
+    color:var(--accent); letter-spacing:.5px;
   }
 
   .drawing-title { color:var(--text); font-weight:500; }
 
-  /* Status badge */
+  /* ── STATUS BADGE + CLICK-TO-EDIT ── */
   .badge {
     display:inline-flex; align-items:center; gap:5px;
-    padding:3px 10px; border-radius:3px;
-    font-size:11px; font-weight:700;
-    font-family:'Barlow Condensed',sans-serif;
-    letter-spacing:.8px; text-transform:uppercase;
+    padding:3px 10px; border-radius:4px;
+    font-size:10px; font-weight:700; font-family:'Poppins',sans-serif;
+    letter-spacing:.5px; text-transform:uppercase;
     border:1px solid transparent; white-space:nowrap;
+    cursor:pointer; transition:filter .15s, opacity .2s;
+    user-select:none;
   }
+  .badge:hover { filter:brightness(1.25); }
+  .badge.saving { opacity:.5; pointer-events:none; }
 
-  .badge-dot { width:5px; height:5px; border-radius:50%; }
+  .badge-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
 
-  .badge-not-started   { background:rgba(100,116,139,.12); border-color:rgba(100,116,139,.3); color:#94a3b8; }
-  .badge-not-started .badge-dot { background:#64748b; }
-  .badge-in-progress   { background:rgba(30,111,255,.12); border-color:rgba(30,111,255,.3); color:#60a5fa; }
-  .badge-in-progress .badge-dot { background:#1e6fff; animation:pulse 1.5s infinite; }
-  .badge-review        { background:rgba(245,158,11,.12); border-color:rgba(245,158,11,.3); color:#f59e0b; }
-  .badge-review .badge-dot { background:#f59e0b; }
-  .badge-completed     { background:rgba(16,185,129,.12); border-color:rgba(16,185,129,.3); color:#10b981; }
-  .badge-completed .badge-dot { background:#10b981; }
-  .badge-on-hold       { background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.3); color:#ef4444; }
-  .badge-on-hold .badge-dot { background:#ef4444; }
+  .badge-not-started { background:rgba(77,122,94,.12); border-color:rgba(77,122,94,.3); color:#7aad8a; }
+  .badge-not-started .badge-dot { background:#4d7a5e; }
+  .badge-in-progress { background:rgba(34,197,94,.12); border-color:rgba(34,197,94,.3); color:#4ade80; }
+  .badge-in-progress .badge-dot { background:var(--accent); animation:pulse 1.5s infinite; }
+  .badge-review      { background:rgba(251,191,36,.12); border-color:rgba(251,191,36,.3); color:#fbbf24; }
+  .badge-review .badge-dot { background:#fbbf24; }
+  .badge-completed   { background:rgba(134,239,172,.15); border-color:rgba(134,239,172,.4); color:#86efac; }
+  .badge-completed .badge-dot { background:#86efac; }
+  .badge-on-hold     { background:rgba(248,113,113,.12); border-color:rgba(248,113,113,.3); color:#f87171; }
+  .badge-on-hold .badge-dot { background:#f87171; }
 
-  /* Assignee chip */
+  /* Status popup */
+  .status-cell { position:relative; display:inline-block; }
+
+  .status-popup {
+    position:absolute; top:calc(100% + 5px); left:0; z-index:80;
+    background:var(--surface2); border:1px solid var(--border-active);
+    border-radius:8px; min-width:168px; padding:4px;
+    box-shadow:0 12px 40px rgba(0,0,0,.7), 0 0 0 1px rgba(34,197,94,.08);
+    display:none;
+  }
+  .status-popup.open { display:block; animation:popIn .15s ease; }
+  @keyframes popIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+
+  .status-option {
+    display:flex; align-items:center; gap:8px;
+    padding:8px 10px; border-radius:5px; cursor:pointer;
+    font-size:11px; font-weight:600; letter-spacing:.4px;
+    text-transform:uppercase; transition:background .12s;
+    color:var(--text-dim);
+  }
+  .status-option:hover { background:var(--surface3); color:var(--text); }
+  .status-option.active { color:var(--accent); }
+  .opt-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+
+  /* assignee chip */
   .assignee-chip {
     display:inline-flex; align-items:center; gap:6px;
-    padding:3px 10px; border-radius:20px;
+    padding:3px 10px 3px 4px; border-radius:20px;
     background:var(--surface3); border:1px solid var(--border);
-    font-size:12px; font-weight:500;
+    font-size:11px; font-weight:500;
   }
 
   .avatar {
-    width:18px; height:18px; border-radius:50%;
+    width:20px; height:20px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    font-size:9px; font-weight:700; color:#fff;
-    flex-shrink:0;
+    font-size:9px; font-weight:700; color:#fff; flex-shrink:0;
   }
 
-  /* Progress bar */
-  .progress-bar {
-    height:4px; background:var(--surface3); border-radius:2px;
-    overflow:hidden; width:80px;
-  }
+  .progress-bar { height:4px; background:var(--surface3); border-radius:2px; overflow:hidden; }
   .progress-fill {
     height:100%; border-radius:2px;
-    background:linear-gradient(90deg, var(--accent), var(--accent2));
+    background:linear-gradient(90deg, var(--accent-dark), var(--accent2));
     transition:width .4s ease;
   }
 
-  /* Tree view (Yard) */
+  /* Tree */
   .tree-container {
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:8px; overflow:hidden;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;
   }
 
-  .tree-header {
-    background:var(--surface2);
-    border-bottom:1px solid var(--border);
-    padding:12px 16px;
-    display:flex; align-items:center; gap:10px;
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:700; font-size:13px; letter-spacing:2px;
-    text-transform:uppercase; color:var(--text-muted);
-  }
-
-  .tree-node {
-    border-bottom:1px solid var(--border);
-  }
+  .tree-node { border-bottom:1px solid var(--border); }
   .tree-node:last-child { border-bottom:none; }
 
   .tree-section-header {
     display:flex; align-items:center; gap:10px;
-    padding:13px 16px; cursor:pointer;
-    background:var(--surface2);
-    border-bottom:1px solid var(--border);
-    transition:background .15s;
+    padding:13px 16px; cursor:pointer; background:var(--surface2);
+    border-bottom:1px solid var(--border); transition:background .15s;
   }
   .tree-section-header:hover { background:var(--surface3); }
 
   .tree-toggle {
-    width:18px; height:18px;
-    background:var(--surface3); border:1px solid var(--border);
-    border-radius:3px; display:flex; align-items:center; justify-content:center;
-    font-size:10px; color:var(--accent); flex-shrink:0;
-    transition:transform .2s;
+    width:18px; height:18px; background:var(--surface3);
+    border:1px solid var(--border-active); border-radius:4px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px; color:var(--accent); flex-shrink:0;
   }
 
   .tree-section-name {
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:700; font-size:14px; letter-spacing:1px;
-    text-transform:uppercase; flex:1;
+    font-weight:700; font-size:13px; letter-spacing:.5px;
+    text-transform:uppercase; flex:1; color:var(--text);
   }
 
   .tree-count {
-    font-family:'Share Tech Mono',monospace;
-    font-size:11px; color:var(--text-muted);
-    background:var(--surface3); border:1px solid var(--border);
-    padding:2px 8px; border-radius:3px;
+    font-family:'Share Tech Mono',monospace; font-size:10px;
+    color:var(--text-muted); background:var(--surface3);
+    border:1px solid var(--border); padding:2px 8px; border-radius:4px;
   }
 
   .tree-children { display:none; }
@@ -372,30 +330,19 @@
     display:flex; align-items:center; gap:10px;
     padding:10px 16px 10px 36px; cursor:pointer;
     border-bottom:1px solid var(--border);
-    transition:background .15s;
-    background:var(--surface);
+    transition:background .15s; background:var(--surface);
   }
   .tree-sub-header:hover { background:var(--surface2); }
 
   .tree-connector {
-    width:16px; height:16px; flex-shrink:0;
-    position:relative;
+    width:16px; height:16px; flex-shrink:0; position:relative;
   }
-  .tree-connector::before {
-    content:''; position:absolute;
-    left:6px; top:0; bottom:50%; width:1px;
-    background:var(--border-active);
-  }
-  .tree-connector::after {
-    content:''; position:absolute;
-    left:6px; top:50%; right:0; height:1px;
-    background:var(--border-active);
-  }
+  .tree-connector::before { content:''; position:absolute; left:6px; top:0; bottom:50%; width:1px; background:var(--border-active); }
+  .tree-connector::after  { content:''; position:absolute; left:6px; top:50%; right:0; height:1px; background:var(--border-active); }
 
   .tree-sub-name {
-    font-family:'Share Tech Mono',monospace;
-    font-size:12px; color:var(--accent); flex:1;
-    letter-spacing:.5px;
+    font-family:'Share Tech Mono',monospace; font-size:12px;
+    color:var(--accent); flex:1; letter-spacing:.5px;
   }
 
   .tree-sub-children { display:none; }
@@ -403,88 +350,67 @@
 
   .tree-leaf {
     display:flex; align-items:center; gap:10px;
-    padding:9px 16px 9px 60px;
-    border-bottom:1px solid var(--border);
+    padding:9px 16px 9px 60px; border-bottom:1px solid var(--border);
     transition:background .15s;
-    font-size:13px;
   }
   .tree-leaf:last-child { border-bottom:none; }
   .tree-leaf:hover { background:var(--surface2); }
 
   .tree-leaf-connector {
-    width:24px; height:16px; flex-shrink:0;
-    position:relative;
+    width:24px; height:16px; flex-shrink:0; position:relative;
   }
-  .tree-leaf-connector::before {
-    content:''; position:absolute;
-    left:0; top:0; bottom:50%; width:1px;
-    background:var(--border);
+  .tree-leaf-connector::before { content:''; position:absolute; left:0; top:0; bottom:50%; width:1px; background:var(--border); }
+  .tree-leaf-connector::after  { content:''; position:absolute; left:0; top:50%; right:0; height:1px; background:var(--border); }
+
+  .section-label {
+    font-weight:700; font-size:10px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--text-muted); margin-bottom:10px; padding-left:2px;
+    display:flex; align-items:center; gap:8px;
   }
-  .tree-leaf-connector::after {
-    content:''; position:absolute;
-    left:0; top:50%; right:0; height:1px;
-    background:var(--border);
-  }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
 
   /* Modal */
   .modal-overlay {
     position:fixed; inset:0; z-index:200;
-    background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
+    background:rgba(0,0,0,.75); backdrop-filter:blur(8px);
     display:none; align-items:center; justify-content:center;
   }
   .modal-overlay.open { display:flex; }
 
   .modal {
-    background:var(--surface);
-    border:1px solid var(--border-active);
-    border-radius:8px; width:500px; max-width:95vw;
-    box-shadow:0 24px 80px rgba(0,0,0,.6);
-    animation: modalIn .2s ease;
+    background:var(--surface); border:1px solid var(--border-active);
+    border-radius:12px; width:500px; max-width:95vw;
+    box-shadow:0 24px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(34,197,94,.08);
+    animation:modalIn .2s ease;
   }
-
-  @keyframes modalIn {
-    from { opacity:0; transform:scale(.95) translateY(-10px); }
-    to { opacity:1; transform:scale(1) translateY(0); }
-  }
+  @keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(-10px)} to{opacity:1;transform:none} }
 
   .modal-header {
     padding:16px 20px; border-bottom:1px solid var(--border);
     display:flex; align-items:center; justify-content:space-between;
   }
 
-  .modal-title {
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:700; font-size:15px; letter-spacing:2px;
-    text-transform:uppercase; color:var(--accent);
-  }
+  .modal-title { font-weight:700; font-size:14px; letter-spacing:1px; text-transform:uppercase; color:var(--accent); }
 
   .modal-close {
-    background:none; border:none; color:var(--text-muted);
-    font-size:18px; cursor:pointer; padding:2px 6px;
-    border-radius:3px; transition:all .15s;
+    background:none; border:none; color:var(--text-muted); font-size:18px;
+    cursor:pointer; padding:2px 6px; border-radius:4px; transition:all .15s;
   }
   .modal-close:hover { color:var(--text); background:var(--surface2); }
 
   .modal-body { padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-
   .field { display:flex; flex-direction:column; gap:6px; }
   .field.full { grid-column:1/-1; }
 
-  .field label {
-    font-size:10px; letter-spacing:2px; text-transform:uppercase;
-    color:var(--text-muted); font-family:'Barlow Condensed',sans-serif; font-weight:600;
-  }
+  .field label { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); font-weight:700; }
 
-  .field input, .field select, .field textarea {
+  .field input, .field select {
     background:var(--surface2); border:1px solid var(--border);
-    color:var(--text); padding:9px 12px; border-radius:4px;
-    font-size:13px; font-family:'Barlow',sans-serif; outline:none;
-    transition:border-color .2s;
+    color:var(--text); padding:9px 12px; border-radius:6px;
+    font-size:12px; font-family:'Poppins',sans-serif; outline:none; transition:all .2s;
   }
-  .field input:focus, .field select:focus, .field textarea:focus {
-    border-color:var(--accent);
-  }
-  .field input::placeholder, .field textarea::placeholder { color:var(--text-muted); }
+  .field input:focus, .field select:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
+  .field input::placeholder { color:var(--text-muted); }
 
   .modal-footer {
     padding:14px 20px; border-top:1px solid var(--border);
@@ -493,112 +419,43 @@
 
   .btn-cancel {
     background:var(--surface2); border:1px solid var(--border);
-    color:var(--text-dim); padding:8px 18px; border-radius:4px;
-    font-family:'Barlow Condensed',sans-serif; font-weight:600;
-    font-size:13px; letter-spacing:1px; cursor:pointer;
-    transition:all .2s;
+    color:var(--text-dim); padding:8px 18px; border-radius:6px;
+    font-family:'Poppins',sans-serif; font-weight:600; font-size:12px;
+    cursor:pointer; transition:all .2s;
   }
   .btn-cancel:hover { border-color:var(--text-muted); color:var(--text); }
 
-  /* Status select in rows */
-  .status-select {
-    background:transparent; border:none; color:inherit;
-    font-size:11px; font-weight:700;
-    font-family:'Barlow Condensed',sans-serif; letter-spacing:.8px;
-    text-transform:uppercase; cursor:pointer; outline:none;
-    padding:0; max-width:120px;
-  }
-
-  /* Loading */
   .loading-row td {
-    text-align:center; padding:40px;
-    color:var(--text-muted);
-    font-family:'Share Tech Mono',monospace; font-size:12px;
-    letter-spacing:2px;
+    text-align:center; padding:40px; color:var(--text-muted);
+    font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:2px;
   }
 
   .spinner {
-    display:inline-block; width:16px; height:16px;
-    border:2px solid var(--border);
-    border-top-color:var(--accent);
+    display:inline-block; width:14px; height:14px;
+    border:2px solid var(--border); border-top-color:var(--accent);
     border-radius:50%; animation:spin 1s linear infinite;
     vertical-align:middle; margin-right:8px;
   }
 
-  /* Empty state */
-  .empty-state {
-    text-align:center; padding:60px 20px;
-    color:var(--text-muted);
+  .empty-state { text-align:center; padding:60px 20px; color:var(--text-muted); }
+  .empty-state p { font-size:12px; letter-spacing:1.5px; font-weight:600; }
+
+  .toast {
+    position:fixed; bottom:24px; right:24px; z-index:300;
+    background:var(--surface2); border:1px solid var(--border-active);
+    border-left:3px solid var(--accent); border-radius:8px; padding:12px 16px;
+    font-size:12px; font-weight:500; color:var(--text);
+    box-shadow:0 8px 32px rgba(0,0,0,.5), 0 0 16px var(--accent-glow);
+    transform:translateY(80px); opacity:0;
+    transition:all .35s cubic-bezier(.34,1.56,.64,1);
+    max-width:300px;
   }
+  .toast.show { transform:translateY(0); opacity:1; }
 
-  .empty-state svg { opacity:.3; margin-bottom:12px; }
-  .empty-state p { font-size:13px; letter-spacing:1px; }
-
-  /* Status indicator inline edit */
-  .status-cell { cursor:pointer; }
-
-  /* Scrollbar */
   ::-webkit-scrollbar { width:6px; height:6px; }
   ::-webkit-scrollbar-track { background:var(--bg); }
   ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
   ::-webkit-scrollbar-thumb:hover { background:var(--border-active); }
-
-  /* Toast */
-  .toast {
-    position:fixed; bottom:24px; right:24px; z-index:300;
-    background:var(--surface);
-    border:1px solid var(--border-active);
-    border-left:3px solid var(--accent2);
-    border-radius:6px; padding:12px 16px;
-    font-size:13px; color:var(--text);
-    box-shadow:0 8px 32px rgba(0,0,0,.4);
-    transform:translateY(80px); opacity:0;
-    transition:all .3s cubic-bezier(.34,1.56,.64,1);
-    max-width:280px;
-  }
-  .toast.show { transform:translateY(0); opacity:1; }
-
-  /* Section label */
-  .section-label {
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:700; font-size:11px; letter-spacing:2px;
-    text-transform:uppercase; color:var(--text-muted);
-    margin-bottom:10px; padding-left:2px;
-    display:flex; align-items:center; gap:8px;
-  }
-  .section-label::after {
-    content:''; flex:1; height:1px; background:var(--border);
-  }
-
-  /* inline status editor */
-  .status-wrapper { position:relative; display:inline-flex; }
-  .status-dropdown {
-    position:absolute; top:calc(100% + 4px); left:0; z-index:50;
-    background:var(--surface);
-    border:1px solid var(--border-active);
-    border-radius:4px; min-width:150px;
-    box-shadow:0 8px 24px rgba(0,0,0,.4);
-    display:none;
-  }
-  .status-dropdown.open { display:block; }
-  .status-option {
-    padding:8px 12px; cursor:pointer; font-size:12px;
-    font-family:'Barlow Condensed',sans-serif; font-weight:600;
-    letter-spacing:.8px; text-transform:uppercase;
-    transition:background .15s;
-    display:flex; align-items:center; gap:8px;
-  }
-  .status-option:hover { background:var(--surface2); }
-
-  /* column widths */
-  .col-num { width:120px; }
-  .col-title { min-width:200px; }
-  .col-section { width:150px; }
-  .col-sub { width:130px; }
-  .col-status { width:150px; }
-  .col-assignee { width:140px; }
-  .col-progress { width:110px; }
-  .col-actions { width:60px; }
 </style>
 </head>
 <body>
@@ -611,66 +468,62 @@
   <div class="header-divider"></div>
   <span class="project-tag">PRODUCTION MANAGEMENT SYSTEM</span>
   <div class="header-right">
-    <div class="live-badge">
-      <div class="live-dot"></div>
-      LIVE
-    </div>
+    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
     <div class="mode-switcher">
-      <button class="mode-btn active" id="btn-yard" onclick="setMode('yard')">YARD</button>
-      <button class="mode-btn" id="btn-mid" onclick="setMode('midsection')">MIDSECTION</button>
+      <button class="mode-btn active" id="btn-yard" onclick="setMode('yard')">Yard</button>
+      <button class="mode-btn" id="btn-mid" onclick="setMode('midsection')">Midsection</button>
     </div>
     <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
       <svg id="refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
       </svg>
-      REFRESH
+      Refresh
     </button>
   </div>
 </header>
 
 <main>
-  <!-- Stats -->
-  <div class="stats-row" id="statsRow">
-    <div class="stat-card" style="--accent-color:var(--accent)">
+  <div class="stats-row">
+    <div class="stat-card" style="--card-accent:var(--accent)">
       <div class="stat-label">Total Drawings</div>
       <div class="stat-value" id="stat-total">—</div>
       <div class="stat-sub">All entries</div>
     </div>
-    <div class="stat-card" style="--accent-color:var(--accent2)">
+    <div class="stat-card" style="--card-accent:#86efac">
       <div class="stat-label">Completed</div>
       <div class="stat-value" id="stat-done">—</div>
       <div class="stat-sub" id="stat-done-pct">—</div>
     </div>
-    <div class="stat-card" style="--accent-color:#60a5fa">
+    <div class="stat-card" style="--card-accent:#4ade80">
       <div class="stat-label">In Progress</div>
       <div class="stat-value" id="stat-wip">—</div>
       <div class="stat-sub">Active work</div>
     </div>
-    <div class="stat-card" style="--accent-color:var(--warning)">
+    <div class="stat-card" style="--card-accent:#fbbf24">
       <div class="stat-label">In Review</div>
       <div class="stat-value" id="stat-rev">—</div>
       <div class="stat-sub">Pending check</div>
     </div>
-    <div class="stat-card" style="--accent-color:var(--danger)">
+    <div class="stat-card" style="--card-accent:#f87171">
       <div class="stat-label">Not Started</div>
       <div class="stat-value" id="stat-ns">—</div>
       <div class="stat-sub">Backlog</div>
     </div>
   </div>
 
-  <!-- Toolbar -->
   <div class="toolbar">
-    <input class="search-box" id="searchInput" placeholder="Search drawings, titles…" oninput="filterData()">
+    <input class="search-box" id="searchInput" placeholder="🔍  Search drawings, titles…" oninput="filterData()">
     <select class="filter-select" id="filterStatus" onchange="filterData()">
-      <option value="">ALL STATUS</option>
-      <option value="Not Started">NOT STARTED</option>
-      <option value="In Progress">IN PROGRESS</option>
-      <option value="Review">REVIEW</option>
-      <option value="Completed">COMPLETED</option>
-      <option value="On Hold">ON HOLD</option>
+      <option value="">All Status</option>
+      <option>Not Started</option>
+      <option>In Progress</option>
+      <option>Review</option>
+      <option>Completed</option>
+      <option>On Hold</option>
     </select>
     <select class="filter-select" id="filterAssignee" onchange="filterData()">
-      <option value="">ALL ASSIGNEES</option>
+      <option value="">All Assignees</option>
       <option>Ananthan</option>
       <option>Dinesh</option>
       <option>Rishi</option>
@@ -679,33 +532,31 @@
       <option>Shruthi</option>
     </select>
     <button class="btn-primary" onclick="openModal()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      ADD DRAWING
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Drawing
     </button>
   </div>
 
-  <!-- YARD tree view -->
   <div id="yardView">
-    <div class="section-label">YARD STRUCTURE</div>
+    <div class="section-label">Yard Structure</div>
     <div class="tree-container" id="treeContainer">
-      <div class="loading-row" style="padding:40px; text-align:center; color:var(--text-muted); font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:2px;">
+      <div style="padding:40px;text-align:center;color:var(--text-muted);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;">
         <span class="spinner"></span>LOADING STRUCTURE...
       </div>
     </div>
   </div>
 
-  <!-- MIDSECTION flat table -->
   <div id="midsectionView" style="display:none;">
-    <div class="section-label">MIDSECTION DRAWINGS</div>
+    <div class="section-label">Midsection Drawings</div>
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th class="col-num">DWG NO.</th>
-            <th class="col-title">TITLE</th>
-            <th class="col-status">STATUS</th>
-            <th class="col-assignee">ASSIGNEE</th>
-            <th class="col-progress">PROGRESS</th>
+            <th style="width:120px">DWG NO.</th>
+            <th>TITLE</th>
+            <th style="width:170px">STATUS <span style="font-size:9px;opacity:.5;font-weight:400;">(click to edit)</span></th>
+            <th style="width:150px">ASSIGNEE</th>
+            <th style="width:120px">PROGRESS</th>
           </tr>
         </thead>
         <tbody id="midTable">
@@ -716,11 +567,11 @@
   </div>
 </main>
 
-<!-- Add Drawing Modal -->
+<!-- Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">ADD NEW DRAWING</span>
+      <span class="modal-title">Add New Drawing</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -730,10 +581,7 @@
       </div>
       <div class="field">
         <label>Mode</label>
-        <select id="inp-mode">
-          <option>Yard</option>
-          <option>Midsection</option>
-        </select>
+        <select id="inp-mode"><option>Yard</option><option>Midsection</option></select>
       </div>
       <div class="field full">
         <label>Title</label>
@@ -750,30 +598,23 @@
       <div class="field">
         <label>Assignee</label>
         <select id="inp-assignee">
-          <option>Ananthan</option>
-          <option>Dinesh</option>
-          <option>Rishi</option>
-          <option>Praveen</option>
-          <option>Sajeev</option>
-          <option>Shruthi</option>
+          <option>Ananthan</option><option>Dinesh</option><option>Rishi</option>
+          <option>Praveen</option><option>Sajeev</option><option>Shruthi</option>
         </select>
       </div>
       <div class="field">
         <label>Status</label>
         <select id="inp-status">
-          <option>Not Started</option>
-          <option>In Progress</option>
-          <option>Review</option>
-          <option>Completed</option>
-          <option>On Hold</option>
+          <option>Not Started</option><option>In Progress</option>
+          <option>Review</option><option>Completed</option><option>On Hold</option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">CANCEL</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-primary" onclick="addDrawing()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        SUBMIT
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        Submit
       </button>
     </div>
   </div>
@@ -783,58 +624,89 @@
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxCHxCcVFjBV-kS5dN2E9_QWll83R0uayD6VAf4W6c4KoWjeZuP47pj_dirpUS5_Us80w/exec";
+
 let allData = [];
 let currentMode = 'yard';
 
 const AVATARS = {
-  Ananthan:'#1e6fff', Dinesh:'#00c9a7', Rishi:'#f59e0b',
-  Praveen:'#8b5cf6', Sajeev:'#ef4444', Shruthi:'#ec4899', Shurthi:'#ec4899'
+  Ananthan:'#16a34a', Dinesh:'#0d9488', Rishi:'#d97706',
+  Praveen:'#7c3aed', Sajeev:'#dc2626', Shruthi:'#db2777', Shurthi:'#db2777'
 };
 
 const STATUS_MAP = {
-  'Not Started':'not-started',
-  'In Progress':'in-progress',
-  'Review':'review',
-  'Completed':'completed',
-  'On Hold':'on-hold'
+  'Not Started':'not-started','In Progress':'in-progress',
+  'Review':'review','Completed':'completed','On Hold':'on-hold'
 };
 
 const PROGRESS_MAP = {
-  'Not Started':0, 'In Progress':45, 'Review':75, 'Completed':100, 'On Hold':20
+  'Not Started':0,'In Progress':45,'Review':75,'Completed':100,'On Hold':20
 };
 
-function setMode(mode) {
-  currentMode = mode;
-  document.getElementById('btn-yard').classList.toggle('active', mode==='yard');
-  document.getElementById('btn-mid').classList.toggle('active', mode==='midsection');
-  document.getElementById('yardView').style.display = mode==='yard' ? '' : 'none';
-  document.getElementById('midsectionView').style.display = mode==='midsection' ? '' : 'none';
+const STATUS_DOT = {
+  'Not Started':'#4d7a5e','In Progress':'#22c55e',
+  'Review':'#fbbf24','Completed':'#86efac','On Hold':'#f87171'
+};
+
+const STATUSES = ['Not Started','In Progress','Review','Completed','On Hold'];
+
+/* ── MODE ── */
+function setMode(m) {
+  currentMode = m;
+  document.getElementById('btn-yard').classList.toggle('active', m==='yard');
+  document.getElementById('btn-mid').classList.toggle('active', m==='midsection');
+  document.getElementById('yardView').style.display = m==='yard' ? '' : 'none';
+  document.getElementById('midsectionView').style.display = m==='midsection' ? '' : 'none';
   renderCurrent();
 }
 
+/* ── LOAD ── */
 async function loadData() {
   const btn = document.getElementById('refreshBtn');
   btn.classList.add('spinning');
-
-  // Show loading states
-  document.getElementById('treeContainer').innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-muted);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;"><span class="spinner"></span>LOADING STRUCTURE...</div>`;
-  document.getElementById('midTable').innerHTML = `<tr class="loading-row"><td colspan="5"><span class="spinner"></span>LOADING DATA...</td></tr>`;
-
+  document.getElementById('treeContainer').innerHTML =
+    `<div style="padding:40px;text-align:center;color:var(--text-muted);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;"><span class="spinner"></span>LOADING...</div>`;
+  document.getElementById('midTable').innerHTML =
+    `<tr class="loading-row"><td colspan="5"><span class="spinner"></span>LOADING DATA...</td></tr>`;
   try {
     const res = await fetch(API + '?t=' + Date.now());
     allData = await res.json();
-    updateStats();
-    renderCurrent();
-    showToast('Data refreshed successfully');
+    updateStats(); renderCurrent();
+    showToast('✓ Data refreshed');
   } catch(e) {
-    showToast('Failed to load data — check connection', true);
-    document.getElementById('treeContainer').innerHTML = `<div style="padding:40px;text-align:center;color:var(--danger);font-family:'Share Tech Mono',monospace;font-size:12px;">CONNECTION ERROR</div>`;
-    document.getElementById('midTable').innerHTML = `<tr class="loading-row"><td colspan="5" style="color:var(--danger)">FAILED TO LOAD</td></tr>`;
+    showToast('Connection error', true);
   } finally {
     btn.classList.remove('spinning');
   }
 }
 
+/* ── UPDATE STATUS → GOOGLE SHEET ── */
+async function updateStatus(drawingNumber, newStatus) {
+  // Optimistic update
+  const item = allData.find(d => (d.Number||'') === drawingNumber);
+  const oldStatus = item ? item.Status : '';
+  if (item) item.Status = newStatus;
+  updateStats();
+  renderCurrent();
+
+  try {
+    const response = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'updateStatus',
+        number: drawingNumber,
+        status: newStatus
+      })
+    });
+    showToast(`✓ "${drawingNumber}" → ${newStatus}`);
+  } catch(e) {
+    // Revert
+    if (item) item.Status = oldStatus;
+    showToast('Failed to save status', true);
+    updateStats(); renderCurrent();
+  }
+}
+
+/* ── STATS ── */
 function updateStats() {
   const t = allData.length;
   const done = allData.filter(d=>d.Status==='Completed').length;
@@ -850,40 +722,74 @@ function updateStats() {
 }
 
 function renderCurrent() {
-  if (currentMode === 'yard') renderYard();
-  else renderMidsection();
+  if (currentMode==='yard') renderYard(); else renderMidsection();
 }
 
 function getFiltered() {
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const status = document.getElementById('filterStatus').value;
+  const search   = document.getElementById('searchInput').value.toLowerCase();
+  const status   = document.getElementById('filterStatus').value;
   const assignee = document.getElementById('filterAssignee').value;
   return allData.filter(d => {
-    const matchSearch = !search ||
-      (d.Number||'').toLowerCase().includes(search) ||
-      (d.Title||'').toLowerCase().includes(search);
-    const matchStatus = !status || d.Status === status;
-    const matchAssignee = !assignee || d.Assignee === assignee;
-    return matchSearch && matchStatus && matchAssignee;
+    const ms  = !search || (d.Number||'').toLowerCase().includes(search) || (d.Title||'').toLowerCase().includes(search);
+    const mst = !status || d.Status===status;
+    const ma  = !assignee || d.Assignee===assignee;
+    return ms && mst && ma;
   });
 }
 
-function filterData() {
-  updateStats();
-  renderCurrent();
+function filterData() { updateStats(); renderCurrent(); }
+
+/* ── STATUS BADGE HTML ── */
+let _uid = 0;
+function statusBadgeHtml(d) {
+  const uid = 'sb' + (++_uid);
+  const bClass = STATUS_MAP[d.Status] || 'not-started';
+  const num = (d.Number||'').replace(/['"\\]/g,'');
+  return `<div class="status-cell" id="cell-${uid}">
+    <span class="badge badge-${bClass}" onclick="togglePopup('${uid}')">
+      <span class="badge-dot"></span>${d.Status||'Not Started'} ▾
+    </span>
+    <div class="status-popup" id="popup-${uid}">
+      ${STATUSES.map(s=>`
+        <div class="status-option ${s===d.Status?'active':''}"
+             onclick="pickStatus('${uid}','${num}','${s}',event)">
+          <span class="opt-dot" style="background:${STATUS_DOT[s]}"></span>${s}
+        </div>`).join('')}
+    </div>
+  </div>`;
 }
 
-/* ---- YARD TREE RENDER ---- */
-function renderYard() {
-  const data = getFiltered().filter(d => !d.Mode || d.Mode === 'Yard');
-  const container = document.getElementById('treeContainer');
+function togglePopup(uid) {
+  const p = document.getElementById('popup-'+uid);
+  if (!p) return;
+  const wasOpen = p.classList.contains('open');
+  closeAllPopups();
+  if (!wasOpen) p.classList.add('open');
+}
 
+function closeAllPopups() {
+  document.querySelectorAll('.status-popup.open').forEach(p=>p.classList.remove('open'));
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.status-cell')) closeAllPopups();
+});
+
+function pickStatus(uid, drawingNumber, newStatus, e) {
+  e.stopPropagation();
+  closeAllPopups();
+  updateStatus(drawingNumber, newStatus);
+}
+
+/* ── YARD TREE ── */
+function renderYard() {
+  _uid = 0;
+  const data = getFiltered().filter(d => !d.Mode || d.Mode==='Yard');
+  const container = document.getElementById('treeContainer');
   if (!data.length) {
     container.innerHTML = `<div class="empty-state"><p>NO YARD DRAWINGS FOUND</p></div>`;
     return;
   }
-
-  // Group: Section → SubSection → [drawings]
   const tree = {};
   data.forEach(d => {
     const sec = d.Section || 'Unassigned';
@@ -896,9 +802,8 @@ function renderYard() {
   let html = '';
   for (const sec in tree) {
     const secCount = Object.values(tree[sec]).flat().length;
-    const secId = 'sec-' + sec.replace(/\s+/g,'_');
-    html += `
-    <div class="tree-node">
+    const secId = 'sec-' + sec.replace(/[\s\W]+/g,'_');
+    html += `<div class="tree-node">
       <div class="tree-section-header" onclick="toggleNode('${secId}')">
         <div class="tree-toggle" id="tog-${secId}">▶</div>
         <span class="tree-section-name">${sec}</span>
@@ -906,12 +811,10 @@ function renderYard() {
         ${sectionBadges(Object.values(tree[sec]).flat())}
       </div>
       <div class="tree-children" id="${secId}">`;
-
     for (const sub in tree[sec]) {
       const items = tree[sec][sub];
-      const subId = secId + '-' + sub.replace(/\s+/g,'_');
-      html += `
-        <div class="tree-node">
+      const subId = secId + '-' + sub.replace(/[\s\W]+/g,'_');
+      html += `<div class="tree-node">
           <div class="tree-sub-header" onclick="toggleNode('${subId}')">
             <div class="tree-connector"></div>
             <div class="tree-toggle" id="tog-${subId}" style="width:14px;height:14px;font-size:9px;">▶</div>
@@ -919,18 +822,13 @@ function renderYard() {
             <span class="tree-count" style="font-size:10px;">${items.length}</span>
             ${sectionBadges(items)}
           </div>
-          <div class="tree-sub-children" id="${subId}">`;
-
-      items.forEach(d => {
-        html += buildLeaf(d);
-      });
-
-      html += `</div></div>`;
+          <div class="tree-sub-children" id="${subId}">
+            ${items.map(d=>buildLeaf(d)).join('')}
+          </div>
+        </div>`;
     }
-
     html += `</div></div>`;
   }
-
   container.innerHTML = html;
 }
 
@@ -938,28 +836,24 @@ function sectionBadges(items) {
   const counts = {};
   items.forEach(d => { counts[d.Status] = (counts[d.Status]||0)+1; });
   return Object.entries(counts).slice(0,3).map(([s,c]) =>
-    `<span class="badge badge-${STATUS_MAP[s]||'not-started'}" style="font-size:10px;padding:2px 7px;">${c} ${s}</span>`
+    `<span class="badge badge-${STATUS_MAP[s]||'not-started'}" style="font-size:9px;padding:2px 7px;pointer-events:none;cursor:default;">${c} ${s}</span>`
   ).join(' ');
 }
 
 function buildLeaf(d) {
-  const color = AVATARS[d.Assignee] || '#64748b';
-  const init = (d.Assignee||'?')[0].toUpperCase();
-  const prog = PROGRESS_MAP[d.Status] || 0;
-  const bClass = STATUS_MAP[d.Status] || 'not-started';
-  return `
-  <div class="tree-leaf">
+  const color = AVATARS[d.Assignee] || '#16a34a';
+  const init  = (d.Assignee||'?')[0].toUpperCase();
+  const prog  = PROGRESS_MAP[d.Status] || 0;
+  return `<div class="tree-leaf">
     <div class="tree-leaf-connector"></div>
     <span class="drawing-num" style="width:120px;flex-shrink:0;">${d.Number||'—'}</span>
     <span class="drawing-title" style="flex:1;font-size:12px;">${d.Title||'—'}</span>
-    <span class="badge badge-${bClass}"  style="margin-right:8px;">
-      <span class="badge-dot"></span>${d.Status||'Not Started'}
-    </span>
-    <div class="assignee-chip" style="margin-right:8px;">
+    ${statusBadgeHtml(d)}
+    <div class="assignee-chip" style="margin-left:8px;">
       <div class="avatar" style="background:${color}">${init}</div>
       <span style="font-size:11px;">${d.Assignee||'—'}</span>
     </div>
-    <div class="progress-bar" title="${prog}% complete">
+    <div class="progress-bar" style="width:70px;margin-left:8px;" title="${prog}%">
       <div class="progress-fill" style="width:${prog}%"></div>
     </div>
   </div>`;
@@ -967,45 +861,38 @@ function buildLeaf(d) {
 
 function toggleNode(id) {
   const el = document.getElementById(id);
-  const tog = document.getElementById('tog-' + id);
+  const tog = document.getElementById('tog-'+id);
   if (!el) return;
   const isOpen = el.classList.toggle('open');
   if (tog) tog.textContent = isOpen ? '▼' : '▶';
 }
 
-/* ---- MIDSECTION TABLE ---- */
+/* ── MIDSECTION TABLE ── */
 function renderMidsection() {
-  const data = getFiltered().filter(d => !d.Mode || d.Mode === 'Midsection');
+  _uid = 0;
+  const data = getFiltered().filter(d => !d.Mode || d.Mode==='Midsection');
   const tbody = document.getElementById('midTable');
-
   if (!data.length) {
     tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><p>NO MIDSECTION DRAWINGS FOUND</p></div></td></tr>`;
     return;
   }
-
   tbody.innerHTML = data.map(d => {
-    const bClass = STATUS_MAP[d.Status] || 'not-started';
-    const color = AVATARS[d.Assignee] || '#64748b';
-    const init = (d.Assignee||'?')[0].toUpperCase();
-    const prog = PROGRESS_MAP[d.Status] || 0;
-    return `
-    <tr>
-      <td class="col-num"><span class="drawing-num">${d.Number||'—'}</span></td>
-      <td class="col-title"><span class="drawing-title">${d.Title||'—'}</span></td>
-      <td class="col-status">
-        <span class="badge badge-${bClass}">
-          <span class="badge-dot"></span>${d.Status||'Not Started'}
-        </span>
-      </td>
-      <td class="col-assignee">
+    const color = AVATARS[d.Assignee] || '#16a34a';
+    const init  = (d.Assignee||'?')[0].toUpperCase();
+    const prog  = PROGRESS_MAP[d.Status] || 0;
+    return `<tr>
+      <td><span class="drawing-num">${d.Number||'—'}</span></td>
+      <td><span class="drawing-title">${d.Title||'—'}</span></td>
+      <td>${statusBadgeHtml(d)}</td>
+      <td>
         <div class="assignee-chip">
           <div class="avatar" style="background:${color}">${init}</div>
           ${d.Assignee||'—'}
         </div>
       </td>
-      <td class="col-progress">
+      <td>
         <div style="display:flex;align-items:center;gap:8px;">
-          <div class="progress-bar" style="width:60px;">
+          <div class="progress-bar" style="width:64px;">
             <div class="progress-fill" style="width:${prog}%"></div>
           </div>
           <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);">${prog}%</span>
@@ -1015,18 +902,14 @@ function renderMidsection() {
   }).join('');
 }
 
-/* ---- MODAL ---- */
+/* ── MODAL ── */
 function openModal() {
-  document.getElementById('inp-mode').value = currentMode === 'yard' ? 'Yard' : 'Midsection';
+  document.getElementById('inp-mode').value = currentMode==='yard' ? 'Yard' : 'Midsection';
   document.getElementById('modalOverlay').classList.add('open');
 }
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-}
-
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 document.getElementById('modalOverlay').addEventListener('click', e => {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
+  if (e.target===document.getElementById('modalOverlay')) closeModal();
 });
 
 async function addDrawing() {
@@ -1037,32 +920,30 @@ async function addDrawing() {
   const section  = document.getElementById('inp-section').value.trim();
   const sub      = document.getElementById('inp-sub').value.trim();
   const mode     = document.getElementById('inp-mode').value;
-
-  if (!number || !title) { showToast('Drawing number and title are required', true); return; }
-
+  if (!number || !title) { showToast('Number & title required', true); return; }
   try {
     await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({ number, title, status, assignee, section, subsection: sub, mode })
+      method:'POST',
+      body: JSON.stringify({ action:'add', number, title, status, assignee, section, subsection:sub, mode })
     });
     closeModal();
-    showToast('Drawing added successfully');
+    showToast('✓ Drawing added');
     loadData();
-  } catch(e) {
-    showToast('Failed to add drawing', true);
-  }
+  } catch(e) { showToast('Failed to add drawing', true); }
 }
 
-/* ---- TOAST ---- */
-function showToast(msg, isError = false) {
+/* ── TOAST ── */
+function showToast(msg, isError=false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.style.borderLeftColor = isError ? 'var(--danger)' : 'var(--accent2)';
+  t.style.borderLeftColor = isError ? 'var(--danger)' : 'var(--accent)';
+  t.style.boxShadow = isError
+    ? '0 8px 32px rgba(0,0,0,.5), 0 0 16px rgba(248,113,113,.2)'
+    : '0 8px 32px rgba(0,0,0,.5), 0 0 16px var(--accent-glow)';
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
-// Init
 loadData();
 </script>
 </body>
