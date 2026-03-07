@@ -468,7 +468,7 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
 /* ══════════════════════════════════════
    API
 ══════════════════════════════════════ */
-const API = "https://script.google.com/macros/s/AKfycbyGAFTfb8cSpbcy8psKluqRb73IjD8WSh2q--OvrAlt4O7RGBcr4Rmh4zBrz_M3DQ5bNQ/exec";
+const API = "https://script.google.com/macros/s/AKfycbwZ02swfb6KJX9vj0znPL8WHUkFZOreOPDQAMHkYdiLAhm2oD_GWR8tuHs5SnTKo1eTAA/exec";
 
 /* ══════════════════════════════════════
    REAL DATA TREE  (from your sheet)
@@ -686,7 +686,7 @@ async function loadData() {
   const btn = document.getElementById('refreshBtn');
   btn.classList.add('spinning');
   try {
-    const res = await fetch(API + '?t=' + Date.now());
+    const res = await fetch(API + '?t=' + Date.now(), { redirect: 'follow' });
     sheetData = await res.json();
     mergeSheet();
     updateKPIs();
@@ -711,7 +711,12 @@ async function updateField(code, field, value) {
   localData[key][field] = value;
   updateKPIs();
   try {
-    await fetch(API, { method:'POST', body: JSON.stringify({ action:'updateField', code, field, value }) });
+    await fetch(API, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action:'updateField', code, field, value })
+    });
     showToast(code + ' updated', '✓');
   } catch(e) {
     showToast('Failed to save', '✕', true);
@@ -730,7 +735,12 @@ async function updateFinalReview(code, value, uid) {
   document.querySelectorAll(`#pop-${uid} .s-opt`).forEach(o => o.classList.toggle('active', o.dataset.val===value));
   updateKPIs();
   try {
-    await fetch(API, { method:'POST', body: JSON.stringify({ action:'updateField', code, field:'Final Review', value }) });
+    await fetch(API, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action:'updateField', code, field:'Final Review', value })
+    });
     showToast(code + ' → ' + value, '✓');
   } catch(e) { showToast('Failed to save', '✕', true); }
 }
@@ -1098,10 +1108,15 @@ async function submitEntry() {
   if (currentMode==='yard')    refreshYardData();
   if (currentMode==='alldata') renderAllData();
   try {
-    await fetch(API, { method:'POST', body: JSON.stringify({
-      action:'upsert', ward, section, code, name, priority, artist, cleanup,
-      gradient, finalReview, plannedStart:start, plannedEnd:end, issue
-    })});
+    await fetch(API, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action:'upsert', ward, section, code, name, priority, artist, cleanup,
+        gradient, finalReview, plannedStart:start, plannedEnd:end, issue
+      })
+    });
     showToast('Entry saved to sheet', '✓');
   } catch(e) { showToast('Saved locally (sheet offline)', '⚠', true); }
 }
