@@ -74,10 +74,6 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
 .tb-sel{background:var(--white);border:1.5px solid var(--border);border-radius:7px;padding:7px 9px;
   color:var(--text);font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;outline:none;cursor:pointer;}
 .tb-sel:focus{border-color:var(--g400);}
-.btn-add{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--g600);color:#fff;border:none;
-  padding:7px 18px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:11px;
-  transition:all .2s;box-shadow:0 2px 10px rgba(29,110,29,.22);}
-.btn-add:hover{background:var(--g700);}
 .btn-export{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;
   border:1.5px solid var(--border);background:var(--white);color:var(--text3);cursor:pointer;
   font-family:'DM Sans',sans-serif;font-weight:600;font-size:11px;transition:all .2s;}
@@ -115,10 +111,10 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
 .sec-count{font-family:'DM Mono',monospace;font-size:9px;color:var(--text5);background:var(--off2);
   border:1px solid var(--border);padding:2px 6px;border-radius:4px;flex-shrink:0;}
 
-/* STATION ROW — wider for more columns */
+/* STATION ROW */
 .stn-row{display:grid;align-items:center;
-  grid-template-columns: 6px 48px 1fr 130px 90px 90px 70px 60px 1fr;
-  gap:10px;padding:9px 18px 9px 36px;border-bottom:1px solid var(--off3);transition:background .12s;}
+  grid-template-columns: 6px 48px 1fr 130px 100px 100px 80px 60px 1fr;
+  gap:8px;padding:8px 18px 8px 36px;border-bottom:1px solid var(--off3);transition:background .12s;}
 .stn-row:last-child{border-bottom:none;}
 .stn-row:hover{background:var(--g50);}
 .stn-bullet{width:5px;height:5px;border-radius:50%;background:var(--g300);flex-shrink:0;}
@@ -128,8 +124,8 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
 
 /* yard col header */
 .sec-col-header{display:grid;align-items:center;
-  grid-template-columns:6px 48px 1fr 130px 90px 90px 70px 60px 1fr;
-  gap:10px;padding:5px 18px 5px 36px;
+  grid-template-columns:6px 48px 1fr 130px 100px 100px 70px 60px 1fr;
+  gap:8px;padding:5px 18px 5px 36px;
   font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text5);
   background:var(--off2);border-bottom:1px solid var(--border);}
 
@@ -164,18 +160,52 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
 .s-opt.active{color:var(--g600);background:var(--g50);}
 .s-opt-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
-/* PERSON CHIP */
+/* INLINE SELECT (artist / cleanup) */
+.inline-sel{
+  border:1.5px solid var(--border); background:var(--off); color:var(--text);
+  border-radius:6px; padding:3px 6px; font-size:10px; font-family:'DM Sans',sans-serif;
+  font-weight:600; cursor:pointer; outline:none; transition:border-color .15s;
+  min-width:80px; max-width:100px;
+}
+.inline-sel:focus{border-color:var(--g400); background:var(--white);}
+.inline-sel:hover{border-color:var(--g300);}
+
+/* GRADIENT TOGGLE SWITCH */
+.grad-chk{display:inline-flex;align-items:center;gap:5px;cursor:pointer;user-select:none;flex-shrink:0;}
+.grad-chk input{display:none;}
+.grad-chk-track{
+  width:30px;height:16px;border-radius:8px;background:#e0e0e0;
+  border:1.5px solid #ccc;position:relative;transition:all .2s;flex-shrink:0;
+}
+.grad-chk input:checked + .grad-chk-track{background:var(--g400);border-color:var(--g500);}
+.grad-chk-thumb{
+  position:absolute;top:1px;left:1px;width:10px;height:10px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s;
+}
+.grad-chk input:checked ~ .grad-chk-track .grad-chk-thumb{transform:translateX(14px);}
+.grad-chk-label{font-size:9px;font-weight:700;color:#888;transition:color .2s;}
+
+/* ISSUE INLINE INPUT */
+.inline-issue{
+  border:1.5px solid var(--border); background:var(--off); color:var(--text);
+  border-radius:6px; padding:3px 8px; font-size:10px; font-family:'DM Sans',sans-serif;
+  outline:none; width:100%; min-width:80px; transition:all .15s;
+}
+.inline-issue:focus{border-color:var(--g400); background:var(--white);}
+.inline-issue::placeholder{color:var(--text5);}
+
+/* PERSON CHIP (kept for AllData table) */
 .p-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 7px 2px 2px;border-radius:20px;
   background:var(--off2);border:1px solid var(--border);font-size:10px;font-weight:600;color:var(--text2);flex-shrink:0;white-space:nowrap;}
 .p-av{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-size:7px;font-weight:800;color:#fff;flex-shrink:0;}
 
-/* GRADIENT PILL */
+/* GRADIENT PILL (kept for AllData table) */
 .grad-pill{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;white-space:nowrap;}
 .grad-true {background:#f0fdf4;color:#064e3b;border:1px solid #a7f3d0;}
 .grad-false{background:#f5f5f5;color:#888;border:1px solid #e0e0e0;}
 
-/* ISSUE TAG */
+/* ISSUE TAG (kept for AllData table) */
 .issue-tag{font-size:10px;color:var(--text4);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   max-width:180px;cursor:help;}
 .issue-tag.has-issue{color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:1px 6px;border-radius:4px;font-style:normal;}
@@ -218,33 +248,6 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
 .t-code{font-family:'DM Mono',monospace;font-size:11px;color:var(--g600);font-weight:500;}
 .tbl-summary{padding:10px 14px;background:var(--off2);border-top:1.5px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;color:var(--text4);}
-
-/* MODAL */
-.overlay{position:fixed;inset:0;z-index:400;background:rgba(10,30,10,.3);backdrop-filter:blur(6px);
-  display:none;align-items:center;justify-content:center;}
-.overlay.open{display:flex;}
-.modal{background:var(--white);border:1.5px solid var(--border2);border-radius:15px;width:580px;max-width:95vw;
-  box-shadow:var(--sh3);animation:modalIn .2s ease;max-height:90vh;overflow-y:auto;}
-@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(-10px)}to{opacity:1;transform:none}}
-.modal-hd{padding:18px 20px 14px;border-bottom:1.5px solid var(--off3);display:flex;align-items:flex-start;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1;}
-.modal-ttl{font-family:'Playfair Display',serif;font-weight:800;font-size:19px;color:var(--g700);}
-.modal-sub{font-size:11px;color:var(--text5);margin-top:1px;}
-.modal-x{background:var(--off2);border:1.5px solid var(--border);color:var(--text3);width:28px;height:28px;
-  border-radius:7px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
-.modal-x:hover{background:var(--off3);}
-.modal-body{padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.field{display:flex;flex-direction:column;gap:4px;}
-.field.full{grid-column:1/-1;}
-.field label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text5);}
-.field input,.field select,.field textarea{background:var(--off);border:1.5px solid var(--border);color:var(--text);
-  padding:8px 11px;border-radius:7px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;}
-.field textarea{resize:vertical;min-height:60px;}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--g400);background:var(--white);box-shadow:0 0 0 3px rgba(63,160,63,.1);}
-.field input::placeholder,.field textarea::placeholder{color:var(--text5);}
-.modal-ft{padding:12px 20px 16px;border-top:1.5px solid var(--off3);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white);}
-.btn-cancel{background:var(--off2);border:1.5px solid var(--border);color:var(--text3);padding:7px 16px;
-  border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;cursor:pointer;transition:all .2s;}
-.btn-cancel:hover{background:var(--off3);}
 
 /* LOADER / EMPTY */
 .loader{display:flex;align-items:center;justify-content:center;gap:9px;padding:44px;
@@ -297,6 +300,8 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
     </button>
   </div>
 </header>
+
+<div id="connBar" style="display:none;position:sticky;top:62px;z-index:190;padding:7px 24px;font-size:11px;font-weight:600;letter-spacing:.3px;border-bottom:1.5px solid var(--border);"></div>
 
 <main>
 
@@ -365,11 +370,6 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
     <option value="">All Priority</option>
     <option>1ST PRIORITY</option><option>2ND PRIORITY</option>
   </select>
-  <button class="btn-add" onclick="openModal()">
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>Add Entry
-  </button>
 </div>
 
 <!-- YARD VIEW -->
@@ -414,53 +414,6 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
   <div class="footer-note" id="lastRefresh">—</div>
 </div>
 
-<!-- MODAL -->
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="modal-hd">
-      <div><div class="modal-ttl">Add / Edit Entry</div><div class="modal-sub">All fields sync to Google Sheet</div></div>
-      <button class="modal-x" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="field"><label>Ward</label>
-        <select id="inp-ward"><option>W1</option><option>W2</option><option>W3</option><option>W4</option></select>
-      </div>
-      <div class="field"><label>Section</label><input id="inp-section" placeholder="e.g. MEJ-TEN"></div>
-      <div class="field"><label>Y Code</label><input id="inp-code" placeholder="e.g. NRK"></div>
-      <div class="field"><label>Yard Name</label><input id="inp-name" placeholder="e.g. NARAIKKINAR"></div>
-      <div class="field"><label>Priority</label>
-        <select id="inp-priority"><option>1ST PRIORITY</option><option>2ND PRIORITY</option></select>
-      </div>
-      <div class="field"><label>Artist</label>
-        <select id="inp-artist"><option value="">— None —</option><option>Ananthan</option><option>Dinesh</option><option>Rishi</option><option>Praveen</option><option>Sajeev</option><option>Shruthi</option></select>
-      </div>
-      <div class="field"><label>Clean Up</label>
-        <select id="inp-cleanup"><option value="">— None —</option><option>Ananthan</option><option>Dinesh</option><option>Rishi</option><option>Praveen</option><option>Sajeev</option><option>Shruthi</option></select>
-      </div>
-      <div class="field"><label>New Gradient</label>
-        <select id="inp-gradient"><option value="FALSE">FALSE</option><option value="TRUE">TRUE</option></select>
-      </div>
-      <div class="field"><label>Final Review</label>
-        <select id="inp-finalreview">
-          <option value="">— None —</option><option>IN SERVER</option><option>IN PROGRESS</option>
-          <option>COMPLETED</option><option>ON HOLD</option>
-        </select>
-      </div>
-      <div class="field"><label>Planned Start</label><input type="date" id="inp-start"></div>
-      <div class="field"><label>Planned End</label><input type="date" id="inp-end"></div>
-      <div class="field full"><label>Issue / Remarks</label>
-        <textarea id="inp-issue" placeholder="Describe any issues or remarks…"></textarea>
-      </div>
-    </div>
-    <div class="modal-ft">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-add" style="margin-left:0" onclick="submitEntry()">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-        Save to Sheet
-      </button>
-    </div>
-  </div>
-</div>
 
 <div class="toast" id="toast"><span id="toast-icon" style="font-size:14px">✓</span><span id="toast-msg"></span></div>
 
@@ -468,96 +421,85 @@ main{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:22px 24p
 /* ══════════════════════════════════════
    API
 ══════════════════════════════════════ */
-const API = "https://script.google.com/macros/s/AKfycbwZ02swfb6KJX9vj0znPL8WHUkFZOreOPDQAMHkYdiLAhm2oD_GWR8tuHs5SnTKo1eTAA/exec";
+const API = "https://script.google.com/macros/s/AKfycbw3ZbjDSWe7iMyfPCZNvjhvauEXSWTFdCKDhA3aNdBMIUkpaODmxPZDRjGWymSsqUQMiw/exec";
 
 /* ══════════════════════════════════════
-   REAL DATA TREE  (from your sheet)
-   Structure: Ward → Section → stations[]
-   Each station: { code, name, priority, plannedStart, plannedEnd, artist, cleanup, gradient, finalReview, issue }
+   TREE — structure only (code + name)
+   ALL other fields (priority, dates, artist,
+   cleanup, gradient, finalReview, issue)
+   come exclusively from Google Sheet.
 ══════════════════════════════════════ */
 const TREE = {
-  W1: {
-    label: "Tirunelveli Region",
-    sections: {
-      "MEJ-TEN": [
-        {code:"NRK", name:"NARAIKKINAR",       priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Dinesh",  cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:"PDF done"},
-        {code:"GDN", name:"GANGAIKONDAN",       priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Praveen", cleanup:"Dinesh",   gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"TAY", name:"TALAIYUTHU",         priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Praveen", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:"RL,GL points Missing, VMAX"},
-        {code:"TEN", name:"TIRUNELVELI JN",     priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:"ortho issue"}
-      ],
-      "TEN-TCN": [
-        {code:"KZY",  name:"KAYALPATTINAM",     priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Praveen", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"PCO",  name:"PALAYANKOTTAI",     priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Dinesh",  cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"SDNR", name:"SEYDUNGANALLUR",    priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Dinesh",  cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"TTQ",  name:"THATHANKULAM",      priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Dinesh",  cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"SVV",  name:"SRIVAIKUNTAM",      priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Dinesh",  cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"AWT",  name:"ALWAR TIRUNAGARI",  priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Praveen", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"NZT",  name:"NAZARETH",          priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Dinesh",  cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"KCHV", name:"KACHCHANAVILAI",    priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Praveen", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"KZB",  name:"KURUMBUR",          priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Praveen", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"ANY",  name:"ARUMUGANERI",       priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Praveen", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:""},
-        {code:"TCN",  name:"TIRUCHENDUR",       priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Dinesh",  cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:"Frence in PF, change unwanted"}
-      ],
-      "TEN-TSI": [
-        {code:"TYT",  name:"TIRUNELVELI TOWN",  priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:"Check Remarks"},
-        {code:"PEA",  name:"PETTAI",            priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:"PDF done"},
-        {code:"SMD",  name:"CHERANMAHADEVI",    priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:"Check Remarks"},
-        {code:"KARK", name:"KARRAIKKURICHICHI", priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Sajeev",   gradient:true,  finalReview:"IN SERVER", issue:"Check Remarks"},
-        {code:"VVR",  name:"VIRAVANALLUR",      priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Sajeev",   gradient:true,  finalReview:"IN SERVER", issue:"Check Remarks"},
-        {code:"KIC",  name:"KALLIDAIKURICHI",   priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Sajeev",   gradient:true,  finalReview:"IN SERVER", issue:"PDF done"},
-        {code:"ASD",  name:"AMBASAMUDRAM",      priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Praveen",  gradient:true,  finalReview:"IN SERVER", issue:"Check Remarks"},
-        {code:"KIB",  name:"KIZHA AMBUR",       priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:"PDF done"},
-        {code:"AZK",  name:"AZHWARKURICHI",     priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:"PDF done"},
-        {code:"RVS",  name:"RAVANASAMUDRAM",    priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:"PDF done"},
-        {code:"KKY",  name:"KILAKADAIYAM",      priority:"1ST PRIORITY", plannedStart:"2026-05-01", plannedEnd:"2026-05-01", artist:"Shruthi", cleanup:"Ananthan", gradient:true,  finalReview:"IN SERVER", issue:"Check Remarks"}
-      ]
-    }
-  },
-  W2: {
-    label: "Madurai Region",
-    sections: {
-      "MDU-NLL": [
-        {code:"TY",  name:"TULIKAPATTI", priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Dinesh",   gradient:false, finalReview:"IN PROGRESS", issue:"Inside the PF not having FT and TOE point, FOB POINTS & PDF MISSING"},
-        {code:"SRT", name:"SATTUR",      priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Praveen",  gradient:false, finalReview:"IN PROGRESS", issue:"Need CS point, FOB points, C or F in platform, RL points"}
-      ],
-      "VPT-SNKL": [
-        {code:"",    name:"RAJAPALAYAM",   priority:"",             plannedStart:"2026-03-05", plannedEnd:"2026-03-12", artist:"Shruthi", cleanup:"Shruthi",  gradient:false, finalReview:"", issue:""},
-        {code:"",    name:"SIVAKASI",      priority:"",             plannedStart:"2026-03-05", plannedEnd:"2026-03-12", artist:"Shruthi", cleanup:"Shruthi",  gradient:false, finalReview:"", issue:""},
-        {code:"",    name:"SRIVILLIPUTTUR",priority:"",             plannedStart:"2026-03-05", plannedEnd:"2026-03-12", artist:"Shruthi", cleanup:"Shruthi",  gradient:false, finalReview:"", issue:""},
-        {code:"",    name:"TIRUTTANGAL",   priority:"",             plannedStart:"2026-03-05", plannedEnd:"2026-03-12", artist:"Shruthi", cleanup:"Shruthi",  gradient:false, finalReview:"", issue:""}
-      ]
-    }
-  },
-  W3: {
-    label: "Tuticorin Region",
-    sections: {
-      "NLL-TN": [
-        {code:"MMDR", name:"MELMARUDUR",          priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Ananthan", gradient:false, finalReview:"IN PROGRESS", issue:"ortho issue, need Boundary"},
-        {code:"KPM",  name:"KUMARAPURAM",         priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Ananthan", gradient:false, finalReview:"IN PROGRESS", issue:"station building point are missing"},
-        {code:"KDU",  name:"KADAMBUR",            priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Dinesh",   gradient:false, finalReview:"IN PROGRESS", issue:"Need CS point, Ortho issue"},
-        {code:"MEJ",  name:"VANCHI MANIYACHCHI JN",priority:"2ND PRIORITY",plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Shruthi",  gradient:false, finalReview:"IN PROGRESS", issue:""},
-        {code:"KLPM", name:"KAILASAPURAM",        priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Dinesh",   gradient:false, finalReview:"IN PROGRESS", issue:"Inside the PF not having FT and TOE point"},
-        {code:"TIP",  name:"TATTAPPARAI",         priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Ananthan", gradient:false, finalReview:"IN PROGRESS", issue:"Need CS point, Ortho issue, need Boundary"},
-        {code:"MVN",  name:"MILAVITTAN",          priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Shruthi",  gradient:false, finalReview:"IN PROGRESS", issue:"need Boundary"},
-        {code:"TN",   name:"TUTICORIN JN",        priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Shruthi",  gradient:false, finalReview:"IN PROGRESS", issue:"need Boundary"},
-        {code:"TME",  name:"TUTIMELUR",           priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Ananthan", gradient:false, finalReview:"IN PROGRESS", issue:"Need CS point, need Boundary"},
-        {code:"NLL",  name:"NALLI",               priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Praveen",  gradient:false, finalReview:"IN PROGRESS", issue:""},
-        {code:"CVP",  name:"KOVILPATTI",          priority:"2ND PRIORITY", plannedStart:"2026-02-16", plannedEnd:"2026-02-25", artist:"",        cleanup:"Praveen",  gradient:false, finalReview:"IN PROGRESS", issue:""}
-      ]
-    }
-  },
-  W4: {
-    label: "Extension (SNKL-EDP)",
-    sections: {
-      "SNKL-EDP": [
-        {code:"KDNL", name:"KADAYANALLUR",     priority:"1ST PRIORITY", plannedStart:"2026-03-05", plannedEnd:"2026-03-10", artist:"Dinesh",  cleanup:"Dinesh",  gradient:false, finalReview:"", issue:""},
-        {code:"PBKS", name:"PAMBAKOVIL SHANDY",priority:"1ST PRIORITY", plannedStart:"2026-03-05", plannedEnd:"2026-03-10", artist:"Dinesh",  cleanup:"Dinesh",  gradient:false, finalReview:"", issue:""},
-        {code:"SNKL", name:"SANKARANKOVIL",    priority:"1ST PRIORITY", plannedStart:"2026-03-05", plannedEnd:"2026-03-10", artist:"Dinesh",  cleanup:"Dinesh",  gradient:false, finalReview:"", issue:""},
-        {code:"SCT",  name:"SENGOTTAI",        priority:"1ST PRIORITY", plannedStart:"2026-03-05", plannedEnd:"2026-03-10", artist:"Praveen", cleanup:"Praveen", gradient:false, finalReview:"", issue:""},
-        {code:"TSI",  name:"TENKASI JN",       priority:"1ST PRIORITY", plannedStart:"2026-03-05", plannedEnd:"2026-03-10", artist:"Praveen", cleanup:"Praveen", gradient:false, finalReview:"", issue:""}
-      ]
-    }
-  }
+  W1: { label:"Tirunelveli Region", sections: {
+    "MEJ-TEN": [
+      {code:"NRK",  name:"NARAIKKINAR"},
+      {code:"GDN",  name:"GANGAIKONDAN"},
+      {code:"TAY",  name:"TALAIYUTHU"},
+      {code:"TEN",  name:"TIRUNELVELI JN"}
+    ],
+    "TEN-TCN": [
+      {code:"KZY",  name:"KAYALPATTINAM"},
+      {code:"PCO",  name:"PALAYANKOTTAI"},
+      {code:"SDNR", name:"SEYDUNGANALLUR"},
+      {code:"TTQ",  name:"THATHANKULAM"},
+      {code:"SVV",  name:"SRIVAIKUNTAM"},
+      {code:"AWT",  name:"ALWAR TIRUNAGARI"},
+      {code:"NZT",  name:"NAZARETH"},
+      {code:"KCHV", name:"KACHCHANAVILAI"},
+      {code:"KZB",  name:"KURUMBUR"},
+      {code:"ANY",  name:"ARUMUGANERI"},
+      {code:"TCN",  name:"TIRUCHENDUR"}
+    ],
+    "TEN-TSI": [
+      {code:"TYT",  name:"TIRUNELVELI TOWN"},
+      {code:"PEA",  name:"PETTAI"},
+      {code:"SMD",  name:"CHERANMAHADEVI"},
+      {code:"KARK", name:"KARRAIKKURICHICHI"},
+      {code:"VVR",  name:"VIRAVANALLUR"},
+      {code:"KIC",  name:"KALLIDAIKURICHI"},
+      {code:"ASD",  name:"AMBASAMUDRAM"},
+      {code:"KIB",  name:"KIZHA AMBUR"},
+      {code:"AZK",  name:"AZHWARKURICHI"},
+      {code:"RVS",  name:"RAVANASAMUDRAM"},
+      {code:"KKY",  name:"KILAKADAIYAM"}
+    ]
+  }},
+  W2: { label:"Madurai Region", sections: {
+    "MDU-NLL": [
+      {code:"TY",  name:"TULIKAPATTI"},
+      {code:"SRT", name:"SATTUR"}
+    ],
+    "VPT-SNKL": [
+      {code:"RPM", name:"RAJAPALAYAM"},
+      {code:"SKS", name:"SIVAKASI"},
+      {code:"SVP", name:"SRIVILLIPUTTUR"},
+      {code:"TTL", name:"TIRUTTANGAL"}
+    ]
+  }},
+  W3: { label:"Tuticorin Region", sections: {
+    "NLL-TN": [
+      {code:"MMDR", name:"MELMARUDUR"},
+      {code:"KPM",  name:"KUMARAPURAM"},
+      {code:"KDU",  name:"KADAMBUR"},
+      {code:"MEJ",  name:"VANCHI MANIYACHCHI JN"},
+      {code:"KLPM", name:"KAILASAPURAM"},
+      {code:"TIP",  name:"TATTAPPARAI"},
+      {code:"MVN",  name:"MILAVITTAN"},
+      {code:"TN",   name:"TUTICORIN JN"},
+      {code:"TME",  name:"TUTIMELUR"},
+      {code:"NLL",  name:"NALLI"},
+      {code:"CVP",  name:"KOVILPATTI"}
+    ]
+  }},
+  W4: { label:"Extension (SNKL-EDP)", sections: {
+    "SNKL-EDP": [
+      {code:"KDNL", name:"KADAYANALLUR"},
+      {code:"PBKS", name:"PAMBAKOVIL SHANDY"},
+      {code:"SNKL", name:"SANKARANKOVIL"},
+      {code:"SCT",  name:"SENGOTTAI"},
+      {code:"TSI",  name:"TENKASI JN"}
+    ]
+  }}
 };
 
 /* Flatten for KPI + export */
@@ -573,53 +515,66 @@ const SDOT = {'Not Started':'#bbb','In Progress':'#2a8a2a','In Server':'#3b82f6'
 const PROG = {'Not Started':0,'In Progress':45,'In Server':80,'Review':75,'Completed':100,'On Hold':20};
 
 /* ══ STATE ══ */
-let sheetData = [];    // data from google sheet — OVERRIDES local data when loaded
-let localData  = {};   // code → {finalReview, issue, gradient, artist, cleanup, plannedStart, plannedEnd}
+let sheetData  = [];  // raw rows from Google Sheet
+let localData  = {};  // code → merged entry (static + sheet dynamic)
 let currentMode = 'yard';
-let treeBuilt = false;
+let treeBuilt   = false;
 let sortCol = 'ward', sortDir = 1;
 
-/* Build localData from TREE (source of truth before sheet loads) */
+/* Build skeleton from TREE — no dynamic defaults whatsoever */
 function buildLocalData() {
   FLAT.forEach(st => {
-    localData[st.code || st.name] = {
-      finalReview: st.finalReview,
-      issue:       st.issue,
-      gradient:    st.gradient,
-      artist:      st.artist,
-      cleanup:     st.cleanup,
-      plannedStart:st.plannedStart,
-      plannedEnd:  st.plannedEnd,
-      priority:    st.priority,
+    localData[st.code] = {
       name:        st.name,
       ward:        st.ward,
-      section:     st.section
+      section:     st.section,
+      /* all dynamic — populated ONLY from sheet */
+      priority:    '',
+      plannedStart:'',
+      plannedEnd:  '',
+      finalReview: '',
+      artist:      '',
+      cleanup:     '',
+      gradient:    false,
+      issue:       ''
     };
   });
 }
 
-/* Merge sheet row into localData — sheet OVERRIDES tree defaults */
+/* mergeSheet — Google Sheet is the ONLY source of truth.
+   Every field for every station comes from the sheet row.
+   Runs after every loadData(). Resets dynamic fields first. */
 function mergeSheet() {
+  /* 1. Reset all dynamic fields */
+  Object.keys(localData).forEach(key => {
+    localData[key].priority    = '';
+    localData[key].plannedStart= '';
+    localData[key].plannedEnd  = '';
+    localData[key].finalReview = '';
+    localData[key].artist      = '';
+    localData[key].cleanup     = '';
+    localData[key].gradient    = false;
+    localData[key].issue       = '';
+  });
+
+  /* 2. Stamp in every field from the sheet */
   sheetData.forEach(row => {
-    const key = (row['Y CODE'] || row.Code || row.Number || '').trim();
+    const key = String(row['Y CODE'] || '').trim();
     if (!key) return;
-    const existing = localData[key] || {};
-    localData[key] = {
-      ...existing,
-      finalReview: row['Final Review'] !== undefined ? row['Final Review'] : existing.finalReview,
-      issue:       row['Issue']        !== undefined ? row['Issue']        : existing.issue,
-      gradient:    row['New Gradient'] !== undefined ? (row['New Gradient']==='TRUE'||row['New Gradient']===true) : existing.gradient,
-      artist:      row['Artist']       !== undefined ? row['Artist']       : existing.artist,
-      cleanup:     row['Clean up']     !== undefined ? row['Clean up']     : existing.cleanup,
-      plannedStart:row['Planned Start'] !== undefined ? row['Planned Start'] : existing.plannedStart,
-      plannedEnd:  row['Planned End']   !== undefined ? row['Planned End']   : existing.plannedEnd,
-    };
+    if (!localData[key]) localData[key] = { name:'', ward:'', section:'' };
+    localData[key].priority    = String(row['Priority']     || '').trim();
+    localData[key].plannedStart= String(row['Planned Start']|| '').trim();
+    localData[key].plannedEnd  = String(row['Planned End']  || '').trim();
+    localData[key].finalReview = String(row['Final Review'] || '').trim();
+    localData[key].artist      = String(row['Artist']       || '').trim();
+    localData[key].cleanup     = String(row['Clean up']     || '').trim();
+    localData[key].gradient    = row['New Gradient'] === true || String(row['New Gradient']).toUpperCase() === 'TRUE';
+    localData[key].issue       = String(row['Issue']        || '').trim();
   });
 }
 
-function getEntry(code, name) {
-  const key = code || name;
-  return localData[key] || {};
+function getEntry(code) {
+  return localData[code] || {};
 }
 
 /* ══ REMAINING DAYS ══ */
@@ -681,21 +636,47 @@ function setMode(m) {
   if (m==='alldata') renderAllData();
 }
 
+/* ══ CONNECTION STATUS BAR ══ */
+function setStatus(msg, type) {
+  const bar = document.getElementById('connBar');
+  if (!bar) return;
+  bar.style.display = 'block';
+  const styles = {
+    ok:    'background:#f0fdf4; color:#065f46; border-color:#a7f3d0;',
+    error: 'background:#fff1f2; color:#9f1239; border-color:#fecdd3;',
+    info:  'background:#eff6ff; color:#1e40af; border-color:#bfdbfe;'
+  };
+  bar.style.cssText += styles[type] || styles.info;
+  bar.textContent = msg;
+  if (type === 'ok') setTimeout(() => { bar.style.display = 'none'; }, 4000);
+}
+
 /* ══ LOAD DATA FROM SHEET ══ */
 async function loadData() {
   const btn = document.getElementById('refreshBtn');
   btn.classList.add('spinning');
+  setStatus('Connecting to sheet…', 'info');
   try {
     const res = await fetch(API + '?t=' + Date.now(), { redirect: 'follow' });
-    sheetData = await res.json();
+    if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+    const text = await res.text();
+    if (!text || text.trim() === '') throw new Error('Empty response from sheet');
+    try {
+      sheetData = JSON.parse(text);
+    } catch(pe) {
+      throw new Error('Invalid JSON: ' + text.slice(0,120));
+    }
+    if (sheetData.error) throw new Error('Sheet error: ' + sheetData.error);
     mergeSheet();
     updateKPIs();
     if (currentMode==='yard')    refreshYardData();
     if (currentMode==='alldata') renderAllData();
     document.getElementById('lastRefresh').textContent = 'Updated ' + new Date().toLocaleTimeString();
-    showToast('Sheet data loaded', '✓');
+    setStatus('✓ Connected — ' + sheetData.length + ' rows loaded', 'ok');
+    showToast('Sheet data loaded (' + sheetData.length + ' rows)', '✓');
   } catch(e) {
-    showToast('Using local data (sheet offline)', '⚠', true);
+    setStatus('⚠ ' + e.message, 'error');
+    showToast(e.message, '⚠', true);
     updateKPIs();
     if (currentMode==='yard')    refreshYardData();
     if (currentMode==='alldata') renderAllData();
@@ -704,55 +685,122 @@ async function loadData() {
   }
 }
 
-/* ══ UPDATE FIELD → SHEET (no DOM re-render) ══ */
-async function updateField(code, field, value) {
-  const key = code;
-  if (!localData[key]) localData[key] = {};
-  localData[key][field] = value;
-  updateKPIs();
-  try {
-    await fetch(API, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action:'updateField', code, field, value })
-    });
-    showToast(code + ' updated', '✓');
-  } catch(e) {
-    showToast('Failed to save', '✕', true);
+/* ══ INLINE FIELD HELPERS ══ */
+
+/* Color the select element based on person chosen */
+function updateSelColor(sel, person) {
+  const AVCOL = {Ananthan:'#16a34a',Dinesh:'#0d9488',Rishi:'#d97706',Praveen:'#7c3aed',Sajeev:'#dc2626',Shruthi:'#db2777'};
+  const col = AVCOL[person];
+  if (col) {
+    sel.style.borderColor = col;
+    sel.style.color = col;
+    sel.style.background = col + '18';
+  } else {
+    sel.style.borderColor = '';
+    sel.style.color = '';
+    sel.style.background = '';
   }
 }
 
+/* Artist or Cleanup changed */
+async function inlineUpdate(code, field, value, selId) {
+  if (!localData[code]) localData[code] = {};
+  localData[code][field] = value;
+  const sel = document.getElementById(selId);
+  if (sel) updateSelColor(sel, value);
+  updateKPIs();
+  const sheetField = field === 'artist' ? 'Artist' : 'Clean up';
+  await postToSheet({ action:'updateField', code, field: sheetField, value });
+}
+
+/* Gradient checkbox toggled */
+async function inlineGradient(code, uid) {
+  const cb  = document.getElementById('grad-'+uid);
+  const txt = document.getElementById('grad-txt-'+uid);
+  if (!cb) return;
+  const val = cb.checked;
+  if (!localData[code]) localData[code] = {};
+  localData[code].gradient = val;
+  if (txt) { txt.textContent = val ? 'TRUE' : 'FALSE'; txt.style.color = val ? '#065f46' : '#888'; }
+  updateKPIs();
+  await postToSheet({ action:'updateField', code, field:'New Gradient', value: val ? 'TRUE' : 'FALSE' });
+}
+
+/* Issue text changed (fires on blur/enter) */
+async function inlineIssue(code, uid) {
+  const inp = document.getElementById('issue-inp-'+uid);
+  if (!inp) return;
+  const value = inp.value.trim();
+  if (!localData[code]) localData[code] = {};
+  localData[code].issue = value;
+  inp.style.borderColor = value ? '#fde68a' : '';
+  inp.style.background  = value ? '#fffbeb' : '';
+  updateKPIs();
+  await postToSheet({ action:'updateField', code, field:'Issue', value });
+}
+
+/* ══ UPDATE FIELD → SHEET ══ */
+async function updateField(code, field, value) {
+  if (!localData[code]) localData[code] = {};
+  localData[code][field] = value;
+  updateKPIs();
+  await postToSheet({ action:'updateField', code, field, value });
+}
+
 async function updateFinalReview(code, value, uid) {
-  const key = code;
-  if (!localData[key]) localData[key] = {};
-  localData[key].finalReview = value;
-  // update badge in-place
+  if (!localData[code]) localData[code] = {};
+  localData[code].finalReview = value;
+
+  /* update badge in-place — no DOM re-render */
   const st = reviewStatus(value);
   const bc = SMAP[st] || 'not-started';
-  const badge = document.getElementById('badge-'+uid);
-  if (badge) { badge.className='s-badge s-'+bc; badge.innerHTML=`<span class="s-dot"></span>${st}<span class="s-caret">▾</span>`; }
-  document.querySelectorAll(`#pop-${uid} .s-opt`).forEach(o => o.classList.toggle('active', o.dataset.val===value));
+  /* update all badges with this code (yard + alldata) */
+  document.querySelectorAll(`[id^="badge-"]`).forEach(b => {
+    const row = b.closest('[data-key]');
+    if (row && row.dataset.key === code) {
+      b.className = 's-badge s-'+bc;
+      b.innerHTML = `<span class="s-dot"></span>${st}<span class="s-caret">▾</span>`;
+    }
+  });
+  document.querySelectorAll(`[id^="pop-"] .s-opt`).forEach(o => {
+    const pop = o.closest('.s-popup');
+    if (pop) {
+      const badge = pop.previousElementSibling;
+      const row = badge && badge.closest('[data-key]');
+      if (row && row.dataset.key === code) o.classList.toggle('active', o.dataset.val === value);
+    }
+  });
   updateKPIs();
+  await postToSheet({ action:'updateField', code, field:'Final Review', value });
+}
+
+/* ══ POST TO SHEET — correct Apps Script method ══
+   Apps Script Web Apps require no-cors for POST from browser.
+   Response is opaque (can't read it) but the write succeeds.
+   We use text/plain so Apps Script parses e.postData.contents.
+══ */
+async function postToSheet(payload) {
   try {
     await fetch(API, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action:'updateField', code, field:'Final Review', value })
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:    JSON.stringify(payload)
     });
-    showToast(code + ' → ' + value, '✓');
-  } catch(e) { showToast('Failed to save', '✕', true); }
+    showToast((payload.code||'Entry') + ' saved ✓', '✓');
+  } catch(e) {
+    showToast('Save failed: ' + e.message, '✕', true);
+  }
 }
 
 /* ══ KPIs ══ */
 function updateKPIs() {
   const all    = FLAT.length;
-  const server = FLAT.filter(s=>(getEntry(s.code,s.name).finalReview||'').toUpperCase()==='IN SERVER').length;
-  const wip    = FLAT.filter(s=>(getEntry(s.code,s.name).finalReview||'').toUpperCase()==='IN PROGRESS').length;
-  const grad   = FLAT.filter(s=>getEntry(s.code,s.name).gradient===true).length;
-  const issues = FLAT.filter(s=>(getEntry(s.code,s.name).issue||'').trim()!=='').length;
-  const ns     = FLAT.filter(s=>!(getEntry(s.code,s.name).finalReview||'').trim()).length;
+  const server = FLAT.filter(s=>(getEntry(s.code).finalReview||'').toUpperCase()==='IN SERVER').length;
+  const wip    = FLAT.filter(s=>(getEntry(s.code).finalReview||'').toUpperCase()==='IN PROGRESS').length;
+  const grad   = FLAT.filter(s=>getEntry(s.code).gradient===true).length;
+  const issues = FLAT.filter(s=>(getEntry(s.code).issue||'').trim()!=='').length;
+  const ns     = FLAT.filter(s=>!(getEntry(s.code).finalReview||'').trim()).length;
   document.getElementById('k-total').textContent   = all;
   document.getElementById('k-server').textContent  = server;
   document.getElementById('k-server-pct').textContent = Math.round(server/all*100)+'% complete';
@@ -786,11 +834,15 @@ function buildYardStructure() {
       let rHtml = stns.length===0 ? `<div class="stn-empty">No stations defined yet</div>` :
         stns.map((stn, i) => {
           const uid = wk+'_'+sk.replace(/\W/g,'_')+'_'+i;
-          const key = stn.code || stn.name;
+          const key = stn.code;
+          const NAMES = ['Ananthan','Dinesh','Rishi','Praveen','Sajeev','Shruthi'];
+          const personOpts = `<option value="">—</option>` + NAMES.map(n=>`<option value="${n}">${n}</option>`).join('');
           return `<div class="stn-row" data-key="${key}" id="srow-${uid}">
             <div class="stn-bullet"></div>
             <span class="stn-code">${stn.code||'—'}</span>
             <span class="stn-name" title="${stn.name}">${stn.name}</span>
+
+            <!-- Final Review badge (dropdown popup) -->
             <div class="status-cell">
               <span class="s-badge s-not-started" id="badge-${uid}" onclick="togglePop('${uid}')">
                 <span class="s-dot"></span>Not Started<span class="s-caret">▾</span>
@@ -804,11 +856,31 @@ function buildYardStructure() {
                   </div>`).join('')}
               </div>
             </div>
-            <div class="p-chip" id="artist-${uid}"><div class="p-av" id="av-art-${uid}"></div><span id="art-name-${uid}">—</span></div>
-            <div class="p-chip" id="cleanup-${uid}"><div class="p-av" id="av-cln-${uid}"></div><span id="cln-name-${uid}">—</span></div>
-            <span class="grad-pill grad-false" id="grad-${uid}">FALSE</span>
+
+            <!-- Artist inline select -->
+            <select class="inline-sel" id="artist-sel-${uid}" onchange="inlineUpdate('${key}','artist',this.value,'artist-sel-${uid}')">
+              ${personOpts}
+            </select>
+
+            <!-- Cleanup inline select -->
+            <select class="inline-sel" id="cleanup-sel-${uid}" onchange="inlineUpdate('${key}','cleanup',this.value,'cleanup-sel-${uid}')">
+              ${personOpts}
+            </select>
+
+            <!-- Gradient checkbox -->
+            <label class="grad-chk" id="grad-lbl-${uid}">
+              <input type="checkbox" id="grad-${uid}" onchange="inlineGradient('${key}','${uid}')">
+              <span class="grad-chk-track"><span class="grad-chk-thumb"></span></span>
+              <span class="grad-chk-label" id="grad-txt-${uid}">FALSE</span>
+            </label>
+
+            <!-- Remaining -->
             <span id="rem-${uid}">—</span>
-            <span class="issue-tag" id="issue-${uid}" title=""></span>
+
+            <!-- Issue inline textbox -->
+            <input class="inline-issue" id="issue-inp-${uid}" type="text" placeholder="—"
+              value="" title=""
+              onchange="inlineIssue('${key}','${uid}')">
           </div>`;
         }).join('');
       sHtml += `<div class="sec-block"><div class="sec-head" id="shead-${sid}">
@@ -842,44 +914,48 @@ function refreshYardData() {
       let secServer = 0;
       stns.forEach((stn, i) => {
         const uid = wk+'_'+sk.replace(/\W/g,'_')+'_'+i;
-        const key = stn.code || stn.name;
-        const entry = getEntry(stn.code, stn.name);
+        const entry = getEntry(stn.code);
         const fr      = entry.finalReview || '';
-        const artist  = entry.artist  || stn.artist  || '';
-        const cleanup = entry.cleanup || stn.cleanup || '';
-        const grad    = entry.gradient !== undefined ? entry.gradient : stn.gradient;
-        const issue   = entry.issue   !== undefined ? entry.issue   : stn.issue;
+        const artist  = entry.artist  || '';
+        const cleanup = entry.cleanup || '';
+        const grad    = entry.gradient === true;
+        const issue   = entry.issue   || '';
 
         // status badge
         const st = reviewStatus(fr);
         const bc = SMAP[st] || 'not-started';
         const badge = document.getElementById('badge-'+uid);
         if (badge) { badge.className='s-badge s-'+bc; badge.innerHTML=`<span class="s-dot"></span>${st}<span class="s-caret">▾</span>`; }
-        // update active in popup
         document.querySelectorAll(`#pop-${uid} .s-opt`).forEach(o => o.classList.toggle('active', o.dataset.val===fr));
 
-        // artist chip
-        setPersonChip('artist-'+uid, 'av-art-'+uid, 'art-name-'+uid, artist);
-        setPersonChip('cleanup-'+uid,'av-cln-'+uid,  'cln-name-'+uid, cleanup);
+        // artist select
+        const artSel = document.getElementById('artist-sel-'+uid);
+        if (artSel) { artSel.value = artist; updateSelColor(artSel, artist); }
 
-        // gradient
-        const gEl = document.getElementById('grad-'+uid);
-        if (gEl) { gEl.className='grad-pill '+(grad?'grad-true':'grad-false'); gEl.textContent=grad?'TRUE':'FALSE'; }
+        // cleanup select
+        const clnSel = document.getElementById('cleanup-sel-'+uid);
+        if (clnSel) { clnSel.value = cleanup; updateSelColor(clnSel, cleanup); }
+
+        // gradient checkbox
+        const gradCb  = document.getElementById('grad-'+uid);
+        const gradTxt = document.getElementById('grad-txt-'+uid);
+        if (gradCb) { gradCb.checked = grad; }
+        if (gradTxt) { gradTxt.textContent = grad ? 'TRUE' : 'FALSE'; gradTxt.style.color = grad ? '#065f46' : '#888'; }
 
         // remaining
         const remEl = document.getElementById('rem-'+uid);
         if (remEl) remEl.innerHTML = remainingHtml({...stn,...entry});
 
-        // issue
-        const issEl = document.getElementById('issue-'+uid);
-        if (issEl) {
-          issEl.textContent = issue || '';
-          issEl.title = issue || '';
-          issEl.className = 'issue-tag' + (issue ? ' has-issue':'');
+        // issue input
+        const issInp = document.getElementById('issue-inp-'+uid);
+        if (issInp && document.activeElement !== issInp) {
+          issInp.value = issue;
+          issInp.style.borderColor = issue ? '#fde68a' : '';
+          issInp.style.background  = issue ? '#fffbeb' : '';
         }
 
         // filter visibility
-        const show = passFilter(f, wk, {artist, cleanup, finalReview:fr, name:stn.name, code:stn.code, priority:stn.priority});
+        const show = passFilter(f, wk, {artist, cleanup, finalReview:fr, name:stn.name, code:stn.code, priority:entry.priority||''});
         const rowEl = document.getElementById('srow-'+uid);
         if (rowEl) rowEl.style.display = show ? '' : 'none';
 
@@ -960,7 +1036,7 @@ function pickReview(uid, code, value, e) { e.stopPropagation(); closeAllPops(); 
 function getAllRows() {
   const f = getF();
   return FLAT.filter(stn => {
-    const entry = getEntry(stn.code, stn.name);
+    const entry = getEntry(stn.code);
     return passFilter(f, stn.ward, {
       name: stn.name, code: stn.code,
       artist: entry.artist||stn.artist||'',
@@ -969,7 +1045,7 @@ function getAllRows() {
       priority: stn.priority
     });
   }).map(stn => {
-    const entry = getEntry(stn.code, stn.name);
+    const entry = getEntry(stn.code);
     return {
       ward:        stn.ward,
       section:     stn.section,
@@ -1078,47 +1154,6 @@ function exportCSV() {
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'VID_Tracker_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
   showToast('CSV exported', '📥');
-}
-
-/* ══ MODAL ══ */
-function openModal() { document.getElementById('overlay').classList.add('open'); }
-function closeModal() { document.getElementById('overlay').classList.remove('open'); }
-document.getElementById('overlay').addEventListener('click', e=>{ if(e.target===document.getElementById('overlay')) closeModal(); });
-
-async function submitEntry() {
-  const ward       = document.getElementById('inp-ward').value;
-  const section    = document.getElementById('inp-section').value.trim();
-  const code       = document.getElementById('inp-code').value.trim();
-  const name       = document.getElementById('inp-name').value.trim();
-  const priority   = document.getElementById('inp-priority').value;
-  const artist     = document.getElementById('inp-artist').value;
-  const cleanup    = document.getElementById('inp-cleanup').value;
-  const gradient   = document.getElementById('inp-gradient').value;
-  const finalReview= document.getElementById('inp-finalreview').value;
-  const start      = document.getElementById('inp-start').value;
-  const end        = document.getElementById('inp-end').value;
-  const issue      = document.getElementById('inp-issue').value.trim();
-  if (!name) { showToast('Yard Name is required', '⚠', true); return; }
-  const key = code || name;
-  // update localData
-  localData[key] = { ...localData[key], ward, section, name, priority, artist, cleanup,
-    gradient: gradient==='TRUE', finalReview, plannedStart:start, plannedEnd:end, issue };
-  closeModal();
-  updateKPIs();
-  if (currentMode==='yard')    refreshYardData();
-  if (currentMode==='alldata') renderAllData();
-  try {
-    await fetch(API, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action:'upsert', ward, section, code, name, priority, artist, cleanup,
-        gradient, finalReview, plannedStart:start, plannedEnd:end, issue
-      })
-    });
-    showToast('Entry saved to sheet', '✓');
-  } catch(e) { showToast('Saved locally (sheet offline)', '⚠', true); }
 }
 
 /* ══ TOAST ══ */
